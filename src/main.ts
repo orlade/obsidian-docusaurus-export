@@ -1,10 +1,10 @@
-import { App, FileSystemAdapter, LinkCache, ListItemCache, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import { App, FileSystemAdapter, LinkCache, ListItemCache, Notice, Plugin, PluginSettingTab, Setting, TFile } from 'obsidian';
 
 import * as path from 'path'
 import * as fs from 'fs-extra'
 import git from 'isomorphic-git'
 import http from 'isomorphic-git/http/node'
-import {clone, flatten} from 'lodash'
+import { clone, flatten } from 'lodash'
 import { docusaurusConfig, babelConfig, packageJson, gitignore, sidebars, NavbarItem, SidebarBuilder, SidebarItem } from './template/templates.js'
 
 interface MyPluginSettings {
@@ -27,10 +27,6 @@ export default class MyPlugin extends Plugin {
 		console.log('loading plugin');
 
 		await this.loadSettings();
-
-		this.addRibbonIcon('dice', 'Open Docusaurus website', () => {
-			new Notice(`open ${this.settings.gitRepo}`);
-		});
 
 		// this.addStatusBarItem().setText('Status Bar Text');
 
@@ -59,16 +55,6 @@ export default class MyPlugin extends Plugin {
 		});
 
 		this.addSettingTab(new SampleSettingTab(this.app, this));
-
-		this.registerCodeMirror((cm: CodeMirror.Editor) => {
-			console.log('codemirror', cm);
-		});
-
-		this.registerDomEvent(document, 'click', (evt: MouseEvent) => {
-			console.log('click', evt);
-		});
-
-		this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
 	}
 
 	onunload() {
@@ -84,20 +70,24 @@ export default class MyPlugin extends Plugin {
 		await this.saveData(this.settings);
 	}
 
-	absPluginDir(): string {
-		return path.join(
-			(this.app.vault.adapter as FileSystemAdapter).getBasePath(),
-			this.manifest.dir
-		);
+	basePath(): string {
+		return (this.app.vault.adapter as FileSystemAdapter).getBasePath();
 	}
 
-	absRepoDir(repo: string) {
+	absPluginDir(): string {
+		return path.join(this.basePath(), this.manifest.dir);
+	}
+
+	relRepoDir(repo: string): string {
 		return path.join(
-			(this.app.vault.adapter as FileSystemAdapter).getBasePath(),
 			this.manifest.dir,
 			'repos',
 			repo.replace('https://', '').replace('.git', '')
 		);
+	}
+
+	absRepoDir(repo: string): string {
+		return path.join(this.basePath(), this.relRepoDir(repo));
 	}
 
 	clone() {
@@ -128,7 +118,13 @@ export default class MyPlugin extends Plugin {
 			const out: Content = {};
 			console.log('preparing', name)
 			const record = content[name];
-			const { headings, links, listItems } = this.app.metadataCache.getCache(record.path);
+			const { headings, links, embeds, listItems, frontmatter } = this.app.metadataCache.getCache(record.path);
+
+			console.log('links', links);
+			console.log('embeds', embeds);
+			out.title = frontmatter?.title;
+			const logoLink = embeds.filter(e => e.displayText.toLowerCase() === "logo")[0]?.link;
+			out.logo = logoLink && this.app.metadataCache.getFirstLinkpathDest(logoLink, record.path);
 
 			const linkOnLine = (line: Number) => links.filter(l => l.position.start.line === line)[0];
 			headings.forEach((h, i) => {
@@ -155,13 +151,6 @@ export default class MyPlugin extends Plugin {
 							position: "left",
 						};
 					});
-					if (headings.some(h => h.heading === "Blog")) {
-						out.navbar.push({
-							to: "blog",
-							label: "Blog",
-							position: "left",
-						});
-					}
 				} else if (h.heading === 'Sidebars') {
 					const roots: SidebarBuilder[] = [];
 					const index: { [key: string]: SidebarBuilder } = {};
@@ -192,6 +181,10 @@ export default class MyPlugin extends Plugin {
 			const vaultDir = (this.app.vault.adapter as FileSystemAdapter).getBasePath();
 			const repoDir = this.absRepoDir(this.settings.gitRepo);
 
+			// const linksToCopy = {};
+			// out.pages.forEach(p => linksToCopy[] = path.join(repoDir, 'src', 'pages'))
+			// 	copyLink())
+
 			const copyLink = (dir: string) => async (link: string) => {
 				const linkFile = this.app.metadataCache.getFirstLinkpathDest(link, record.path);
 				const filepath = path.join(dir, linkFile.path);
@@ -202,7 +195,7 @@ export default class MyPlugin extends Plugin {
 				cache.links && clone(cache.links).reverse().forEach(l => {
 					const before = content.substring(0, l.position.start.offset);
 					const after = content.substr(l.position.end.offset);
-					content = `${before}[${l.displayText||l.link}](${encodeURIComponent(l.link)})${after}`
+					content = `${before}[${l.displayText || l.link}](${encodeURIComponent(l.link)})${after}`
 				});
 
 				const copy = fs.writeFileSync(
@@ -219,11 +212,26 @@ export default class MyPlugin extends Plugin {
 				out.pages.map(copyLink(path.join(repoDir, 'src', 'pages')))
 					.concat(out.blog.map(copyLink(path.join(repoDir, 'blog'))))
 					.concat(out.navbar.map(i => toDocs(i.to.substr(5))))
+				// .concat(copyLink(repoDir)(out.logo))
+				// .concat(copyLink(path.join(repoDir, "static"))(out.logo))
 			)
 			const sidebarLinks: (b: SidebarBuilder) => string[] = (b: SidebarBuilder) =>
 				b.children?.length ? flatten(b.children.map(sidebarLinks)) : [b.value];
 
 			out.sidebars.forEach(b => sidebarLinks(b).map(toDocs))
+
+			out.navbar = out.navbar.map(n => {
+				const target = this.app.metadataCache.getFirstLinkpathDest(n.to.substr(5), record.path);
+				const slug = this.app.metadataCache.getCache(target.path).frontmatter?.slug || target.path;
+				return { ...n, to: `docs${slug}` };
+			})
+			if (headings.some(h => h.heading === "Blog")) {
+				out.navbar.push({
+					to: "blog",
+					label: "Blog",
+					position: "left",
+				});
+			}
 
 			return out
 		}
@@ -236,39 +244,48 @@ export default class MyPlugin extends Plugin {
 		const dir = this.absRepoDir(this.settings.gitRepo);
 		const imgDir = path.join(dir, 'static', 'img');
 		const templateDir = path.join(this.absPluginDir(), 'src', 'template');
+		const logoRelDestPath = path.join('static', 'img', 'logo.png');
+		const logoDestPath = path.join(dir, logoRelDestPath);
 
 		const files: { [key: string]: string } = {
 			'.gitignore': gitignore(),
 			'package.json': packageJson(),
 			'babel.config.js': babelConfig(),
 			'docusaurus.config.js': docusaurusConfig({
-				title: this.settings.siteTitle || DEFAULT_SETTINGS.siteTitle,
+				title: content.title || this.settings.siteTitle || DEFAULT_SETTINGS.siteTitle,
 				url: this.settings.siteUrl || 'https://netlify.com',
 				other: {
 					repo: this.settings.gitRepo,
 					navbar: content.navbar,
-					logoSrc: "img/logo.png",
+					logoSrc: logoRelDestPath,
 				}
 			}),
 			'sidebars.js': sidebars(content.sidebars),
 		};
-		const copies: { [key: string]: string } = {
-			[path.join(templateDir, 'logo-small.png')]: path.join(imgDir, 'favicon.png'),
-			[path.join(templateDir, 'logo.png')]: path.join(dir, 'logo.png'),
-		};
+		// const copies: { [key: string]: string } = {
+		// [path.join(templateDir, 'logo-small.png')]: path.join(imgDir, 'favicon.png'),
+		// [path.join(templateDir, 'logo.png')]: path.join(dir, 'logo.png'),
+		// [path.join(content.logo]: logoDestPath,
+		// [content.logo]: path.join(imgDir, 'favicon.png'),
+		// };
+
+		fs.mkdirpSync(path.dirname(logoDestPath))
+		fs.copyFileSync(path.join(this.basePath(), content.logo.path), logoDestPath);
 
 		Object.keys(files).forEach(f => {
 			fs.writeFileSync(path.join(dir, f), files[f]);
 		});
-		Object.keys(copies).forEach(from => {
-			const to = copies[from];
-			fs.mkdirpSync(path.dirname(to))
-			fs.copyFileSync(from, to);
-		});
+		// Object.keys(copies).forEach(from => {
+		// 	const to = copies[from];
+		// 	fs.mkdirpSync(path.dirname(to))
+		// 	fs.copyFileSync(from, to);
+		// });
 	}
 }
 
 interface Content {
+	title?: string;
+	logo?: TFile;
 	navbar?: NavbarItem[];
 	sidebars?: SidebarBuilder[];
 	pages?: string[];

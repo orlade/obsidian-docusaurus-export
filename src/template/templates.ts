@@ -1,4 +1,6 @@
+import * as path from 'path';
 import { merge } from 'lodash'
+
 const template = {}
 
 export interface NavbarItem {
@@ -138,12 +140,16 @@ export function docusaurusConfig(config: DocusaurusConfig) {
 	});
 }
 
+function clean(name: string): string {
+	return name.replace(/\?/g, '_');
+}
+
 export function sidebars(roots: SidebarBuilder[]) {
 	const json: SidebarObject = {};
 	const toTree = (i: SidebarBuilder): SidebarItem =>
 		i.children.length
 			? { [i.value]: i.children.map(toTree) }
-			: i.value;
+			: clean(i.value);
 	roots.forEach(r => json[r.value] = r.children.map(toTree));
 
 	return stringify({ prefix: 'module.exports = ', json })

@@ -53,6 +53,14 @@ export default class MyPlugin extends Plugin {
 				this.prepareContent()
 			}
 		});
+		this.addCommand({
+			id: 'delete-docusaurus-exported',
+			name: 'Delete exported Docusaurus docs',
+			callback: () => {
+				console.log('delete exported command');
+				this.deleteExported()
+			}
+		});
 
 		this.addSettingTab(new SampleSettingTab(this.app, this));
 	}
@@ -140,7 +148,10 @@ export default class MyPlugin extends Plugin {
 						.replace(/^\s*\-\s*/, '');
 					return { value, children: [] };
 				};
-				const fromLink = (l: LinkCache): SidebarBuilder => ({ value: l.link, children: [] });
+				const fromLink = (l: LinkCache): SidebarBuilder => ({
+					value: l.link,
+					children: [],
+				 });
 
 				if (h.heading === 'Navbar') {
 					out.navbar = items.map(i => {
@@ -187,17 +198,26 @@ export default class MyPlugin extends Plugin {
 
 			const copyLink = (dir: string) => async (link: string) => {
 				const linkFile = this.app.metadataCache.getFirstLinkpathDest(link, record.path);
-				const filepath = path.join(dir, linkFile.path);
-				fs.mkdirSync(path.dirname(filepath), { recursive: true })
-
+				console.log('copying link', link, 'in', record.path, 'file', linkFile)
 				const cache = this.app.metadataCache.getFileCache(linkFile);
+
+				// Clean filenames.
+				let filepath = path.join(dir, clean(linkFile.path));
+
+				// Rename to `index.md` if slug is `/`.
+				if (cache.frontmatter?.slug === '/') {
+					filepath = path.join(dir, 'index.md');
+				}
+
+				// Replace wikilinks with Markdown links.
 				let content = await this.app.vault.read(linkFile);
 				cache.links && clone(cache.links).reverse().forEach(l => {
 					const before = content.substring(0, l.position.start.offset);
 					const after = content.substr(l.position.end.offset);
-					content = `${before}[${l.displayText || l.link}](${encodeURIComponent(l.link)})${after}`
+					content = `${before}[${l.displayText || l.link}](${clean(l.link)})${after}`
 				});
 
+				fs.mkdirSync(path.dirname(filepath), { recursive: true })
 				const copy = fs.writeFileSync(
 					// path.join(vaultDir, linkFile.path),
 					filepath, content
@@ -281,6 +301,18 @@ export default class MyPlugin extends Plugin {
 		// 	fs.copyFileSync(from, to);
 		// });
 	}
+
+	deleteExported() {
+		const dir = this.absRepoDir(this.settings.gitRepo);
+		fs.emptyDirSync(path.join(dir, 'docs'));
+		fs.emptyDirSync(path.join(dir, 'blog'));
+		fs.emptyDirSync(path.join(dir, 'src', 'pages'));
+		fs.emptyDirSync(path.join(dir, 'static', 'img'));
+	}
+}
+
+function clean(name: string): string {
+	return name.replace(/\?/g, '_');
 }
 
 interface Content {

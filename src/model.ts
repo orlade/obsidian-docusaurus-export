@@ -98,6 +98,7 @@ export interface Document {
   slug?: string;
   category?: "blog" | "docs";
   // source: Source;
+  content?: string;
 }
 
 export interface Navbar {
@@ -124,3 +125,7 @@ export interface TreeLeaf extends Document {
 }
 
 export type TreeNode = TreeBranch | TreeLeaf;
+
+export function ref(sourcePath: string): FileRef {
+  return { path: sourcePath, title: "" };
+}

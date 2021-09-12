@@ -1,6 +1,6 @@
-import { isEmpty, flatten } from "lodash";
+import { each, isEmpty, flatten, map, keyBy, some } from "lodash";
 import { basename, join } from "path";
-import { Link, LinkNode, Site, Source, TreeNode } from "./model";
+import { Link, LinkNode, ref, Site, SiteFile, Source, TreeNode } from "./model";
 import { ContentStore } from "./store";
 import { categorize, extractLinks, extractLinkTree, findStructureFiles } from "./structure";
 import {
@@ -90,42 +90,51 @@ export class SiteBuilder {
       },
     };
 
-    const files = await findStructureFiles(this.store);
-    await Promise.all(
-      files.map(async (f) => {
-        const ref = f.structureFile;
-        const m = await this.store.getMetadata(ref);
+    const store = this.store;
 
-        // Blog posts
-        (await extractLinks(this.store, ref, m, "Blog")).forEach(({ sourcePath }) => {
-          site.blog.posts[sourcePath] = { sourcePath: sourcePath };
-        });
+    async function buildIndex(site: Site, file: SiteFile) {
+      const ref = file.structureFile;
+      const m = await store.getMetadata(ref);
+      const linksForHeading = async (h: string) => extractLinks(store, ref, m, h);
 
-        // Docs pages
-        (await extractLinks(this.store, ref, m, "Pages")).forEach(({ sourcePath }) => {
-          site.pages.docs[sourcePath] = { sourcePath: sourcePath };
-        });
+      site.blog.posts = keyBy(await linksForHeading("Blog"), "sourcePath");
+      site.pages.docs = keyBy(await linksForHeading("Pages"), "sourcePath");
 
-        // Sidebar
-        site.sidebar.items = await extractLinkTree(this.store, ref, m, "Sidebars");
-        categorize(site.sidebar.items, site);
+      // Sidebar
+      site.sidebar.items = await extractLinkTree(store, ref, m, "Sidebars");
+      categorize(site.sidebar.items, site);
 
-        // Navbar
-        const navbar = await extractLinkTree(this.store, ref, m, "Navbar");
-        categorize(navbar, site);
-        if (!isEmpty(site.blog.posts)) {
-          navbar.push({ label: "Blog", sourcePath: "/blog" });
-        }
-        site.navbar.items.push(...navbar);
-      })
-    );
+      // Navbar
+      const navbar = await extractLinkTree(store, ref, m, "Navbar");
+      categorize(navbar, site);
+      if (!isEmpty(site.blog.posts)) {
+        navbar.push({ label: "Blog", sourcePath: "/blog" });
+      }
+      site.navbar.items.push(...navbar);
+    }
 
+    async function enrichContent(site: Site) {
+      return Promise.all(
+        map([site.blog.posts, site.pages.docs], async (index) =>
+          Promise.all(
+            map(index, async (p) => (p.content = (await store.loadFile(ref(p.sourcePath))).body))
+          )
+        )
+      );
+    }
+
+    const files = await findStructureFiles(store);
+    if (files.length !== 1) {
+      throw new Error("must be exactly one structure file");
+    }
+
+    await buildIndex(site, files[0]);
+    await enrichContent(site);
     return site;
   }
 
   async write(site: Site): Promise<void> {
-    console.log("writing site", site.path);
-    // const dir = this.absRepoDir(this.settings.gitRepo);
+    console.log("writing site", site.path, site.repo);
     const dir = site.path;
     const logoRelDestPath = join("static", "img", "logo.png");
     const logoDestPath = join(dir, logoRelDestPath);
@@ -156,27 +165,14 @@ export class SiteBuilder {
       await this.store.copy(logo, logoDestPath);
     }
 
-    await Promise.all(
-      Object.keys(files).map(async (f) => {
-        const dest = join(dir, f);
-        // console.log(`writing ${f} to ${dest}`);
-        return await this.store.write(files[f], dest);
-      })
-    );
+    const write = this.store.write.bind(this.store);
 
     await Promise.all(
-      Object.keys(site.blog.posts).map(async (k) => {
-        const fromPath = site.blog.posts[k].sourcePath;
-        // console.log(`copying ${fromPath} to ${join(dir, "blog", fromPath)}`);
-        await this.store.copy({ title: "", path: fromPath }, join(dir, "blog", fromPath));
-      })
-    );
-    await Promise.all(
-      Object.keys(site.pages.docs).map(async (k) => {
-        const fromPath = site.pages.docs[k].sourcePath;
-        // console.log(`copying ${fromPath} to ${join(dir, "docs", fromPath)}`);
-        await this.store.copy({ title: "", path: fromPath }, join(dir, "docs", fromPath));
-      })
+      flatten([
+        map(files, (content, name) => write(content, join(dir, name))),
+        map(site.blog.posts, (post) => write(post.content!, join(dir, "blog", post.sourcePath))),
+        map(site.pages.docs, (doc) => write(doc.content!, join(dir, "docs", doc.sourcePath))),
+      ])
     );
     console.log("done write");
   }

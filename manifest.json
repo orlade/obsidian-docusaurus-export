@@ -1,10 +1,10 @@
 {
-	"id": "obsidian-docusaurus-export-plugin",
-	"name": "Docusaurus Export",
-	"version": "1.0.1",
-	"minAppVersion": "0.9.12",
-	"description": "Seamlessly export Obsidian content to one or more Docusaurus websites.",
-	"author": "Oliver Lade",
-	"authorUrl": "https://github.com/orlade",
-	"isDesktopOnly": false
+  "id": "obsidian-docusaurus-export-plugin",
+  "name": "Docusaurus Export",
+  "version": "1.0.1",
+  "minAppVersion": "0.9.12",
+  "description": "Seamlessly export Obsidian content to one or more Docusaurus websites.",
+  "author": "Oliver Lade",
+  "authorUrl": "https://github.com/orlade",
+  "isDesktopOnly": false
 }

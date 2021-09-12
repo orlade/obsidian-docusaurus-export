@@ -1,373 +1,240 @@
-import { App, FileSystemAdapter, LinkCache, ListItemCache, Notice, Plugin, PluginSettingTab, Setting, TFile } from 'obsidian';
+import { App, FileSystemAdapter, Plugin, PluginSettingTab, Setting, TFile } from "obsidian";
 
-import * as path from 'path'
-import * as fs from 'fs-extra'
-import git from 'isomorphic-git'
-import http from 'isomorphic-git/http/node'
-import { clone, flatten } from 'lodash'
-import { docusaurusConfig, babelConfig, packageJson, gitignore, sidebars, NavbarItem, SidebarBuilder, SidebarItem } from './template/templates.js'
+import { join } from "path";
+import * as fs from "fs-extra";
+import git from "isomorphic-git";
+import http from "isomorphic-git/http/node";
+import { NavbarItem, SidebarBuilder } from "./template/templates.js";
+import { ObsidianContentStore } from "./store.js";
+import { SiteBuilder } from "./pipeline.js";
 
 interface MyPluginSettings {
-	gitRepo: string;
-	siteTitle: string;
-	siteUrl: string;
+  gitRepo: string;
+  siteTitle: string;
+  siteUrl: string;
+  exportDir: string;
 }
 
 const DEFAULT_SETTINGS: MyPluginSettings = {
-	gitRepo: '',
-	siteTitle: 'My Obsidian Export',
-	siteUrl: '',
-}
+  gitRepo: "",
+  siteTitle: "My Obsidian Export",
+  siteUrl: "",
+  exportDir: "~/obsidian-docusaurus-exports",
+};
 
 export default class MyPlugin extends Plugin {
-	settings: MyPluginSettings;
+  settings: MyPluginSettings;
 
-	async onload() {
-		(window as any).plugin = this;
-		console.log('loading plugin');
+  async onload() {
+    (window as any).plugin = this;
+    console.log("loading plugin");
 
-		await this.loadSettings();
+    await this.loadSettings();
 
-		// this.addStatusBarItem().setText('Status Bar Text');
+    this.addCommand({
+      id: "open-docusaurus-website",
+      name: "Open Docusaurus website",
+      callback: () => {
+        console.log("Open Docusaurus website");
+      },
+    });
+    this.addCommand({
+      id: "clone-docusaurus-website",
+      name: "Clone Docusaurus website",
+      callback: () => {
+        console.log("clone command");
+        this.clone();
+      },
+    });
+    this.addCommand({
+      id: "prepare-docusaurus-website",
+      name: "Prepare Docusaurus website",
+      callback: () => {
+        console.log("prepare command");
+        this.prepareContent();
+      },
+    });
+    this.addCommand({
+      id: "delete-docusaurus-exported",
+      name: "Delete exported Docusaurus docs",
+      callback: () => {
+        console.log("delete exported command");
+        this.deleteExported();
+      },
+    });
 
-		this.addCommand({
-			id: 'open-docusaurus-website',
-			name: 'Open Docusaurus website',
-			callback: () => {
-				console.log('Open Docusaurus website');
-			}
-		});
-		this.addCommand({
-			id: 'clone-docusaurus-website',
-			name: 'Clone Docusaurus website',
-			callback: () => {
-				console.log('clone command');
-				this.clone()
-			}
-		});
-		this.addCommand({
-			id: 'prepare-docusaurus-website',
-			name: 'Prepare Docusaurus website',
-			callback: () => {
-				console.log('prepare command');
-				this.prepareContent()
-			}
-		});
-		this.addCommand({
-			id: 'delete-docusaurus-exported',
-			name: 'Delete exported Docusaurus docs',
-			callback: () => {
-				console.log('delete exported command');
-				this.deleteExported()
-			}
-		});
+    this.addSettingTab(new SampleSettingTab(this.app, this));
+  }
 
-		this.addSettingTab(new SampleSettingTab(this.app, this));
-	}
+  async loadSettings() {
+    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+  }
 
-	onunload() {
-		console.log('unloading plugin');
-	}
+  async saveSettings() {
+    console.log("saving settings", this.settings);
+    await this.saveData(this.settings);
+  }
 
-	async loadSettings() {
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
-	}
+  basePath(): string {
+    return (this.app.vault.adapter as FileSystemAdapter).getBasePath();
+  }
 
-	async saveSettings() {
-		console.log('saving settings', this.settings)
-		await this.saveData(this.settings);
-	}
+  absPluginDir(): string {
+    return join(this.basePath(), this.manifest.dir);
+  }
 
-	basePath(): string {
-		return (this.app.vault.adapter as FileSystemAdapter).getBasePath();
-	}
+  expandExportDir() {
+    const dir = this.settings.exportDir;
+    if (dir[0] === "~") {
+      return join(process.env.HOME, dir.substr(1));
+    }
+    return dir;
+  }
 
-	absPluginDir(): string {
-		return path.join(this.basePath(), this.manifest.dir);
-	}
+  absRepoDir(repo: string): string {
+    return join(this.expandExportDir(), repo.replace("https://", "").replace(".git", ""));
+  }
 
-	relRepoDir(repo: string): string {
-		return path.join(
-			this.manifest.dir,
-			'repos',
-			repo.replace('https://', '').replace('.git', '')
-		);
-	}
+  clone() {
+    const dir = this.absRepoDir(this.settings.gitRepo);
+    git
+      .clone({ fs, http, dir, url: this.settings.gitRepo })
+      .then(() => console.log("git result", arguments));
+  }
 
-	absRepoDir(repo: string): string {
-		return path.join(this.basePath(), this.relRepoDir(repo));
-	}
+  async prepareContent(): Promise<void> {
+    const sb = new SiteBuilder(new ObsidianContentStore({ plugin: this }));
+    const repo = this.settings.gitRepo;
+    const site = await sb.build({
+      title: this.settings.siteTitle,
+      url: this.settings.siteUrl,
+      repo,
+      path: join(
+        this.manifest.dir,
+        "repos",
+        ...repo.replace("https://", "").replace(".git", "").split("/")
+      ),
+    });
+    console.log("prepared", site);
+    await sb.write(site);
+  }
 
-	clone() {
-		const dir = this.absRepoDir(this.settings.gitRepo);
-		git.clone({ fs, http, dir, url: this.settings.gitRepo })
-			.then(() => console.log('git result', arguments));
-	}
+  //   async write(content: Content) {
+  //     const dir = this.absRepoDir(this.settings.gitRepo);
+  //     const imgDir = join(dir, "static", "img");
+  //     const templateDir = join(this.absPluginDir(), "src", "template");
+  //     const logoRelDestPath = join("static", "img", "logo.png");
+  //     const logoDestPath = join(dir, logoRelDestPath);
 
-	async prepareContent() {
-		console.log('preparing');
-		const files = this.app.vault.getMarkdownFiles();
-		const re = new RegExp(`\\s#docusaurus/([^/]+)/_\\s`);
-		const content: any = {};
-		await Promise.all(files.map(f => this.app.vault.read(f)
-			.then(md => {
-				const match = md.match(re);
-				if (match) {
-					content[match[1]] = {
-						path: f.path,
-						content: md,
-					}
-				}
-			})
-		));
-		console.log(content)
+  //     const files: { [key: string]: string } = {
+  //       ".gitignore": gitignore(),
+  //       "package.json": packageJson(),
+  //       "babel.config.js": babelConfig(),
+  //       "docusaurus.config.js": docusaurusConfig({
+  //         title: content.title || this.settings.siteTitle || DEFAULT_SETTINGS.siteTitle,
+  //         url: this.settings.siteUrl || "https://netlify.com",
+  //         other: {
+  //           repo: this.settings.gitRepo,
+  //           navbar: content.navbar,
+  //           logoSrc: logoRelDestPath,
+  //         },
+  //       }),
+  //       "sidebars.js": sidebars(content.sidebars),
+  //       "src/css/custom.css": customCss(),
+  //     };
 
-		const prepare = async (name: string) => {
-			const out: Content = {};
-			console.log('preparing', name)
-			const record = content[name];
-			const { headings, links, embeds, listItems, frontmatter } = this.app.metadataCache.getCache(record.path);
+  //     fs.mkdirpSync(path.dirname(logoDestPath));
+  //     fs.copyFileSync(join(this.basePath(), content.logo.path), logoDestPath);
 
-			console.log('links', links);
-			console.log('embeds', embeds);
-			out.title = frontmatter?.title;
-			const logoLink = embeds.filter(e => e.displayText.toLowerCase() === "logo")[0]?.link;
-			out.logo = logoLink && this.app.metadataCache.getFirstLinkpathDest(logoLink, record.path);
+  //     Object.keys(files).forEach((f) => {
+  //       const dest = join(dir, f);
+  //       fs.mkdirpSync(path.dirname(dest));
+  //       fs.writeFileSync(dest, files[f]);
+  //     });
+  //   }
 
-			const linkOnLine = (line: Number) => links.filter(l => l.position.start.line === line)[0];
-			headings.forEach((h, i) => {
-				const start = h.position.start.line;
-				const end = headings.length > i + 1
-					? headings[i + 1].position.start.line
-					: Number.MAX_SAFE_INTEGER;
-				const items = listItems.filter(i => i.position.start.line > start && i.position.end.line < end);
-
-				const fromText = (i: ListItemCache): SidebarBuilder => {
-					const value = record.content
-						.substring(i.position.start.offset, i.position.end.offset)
-						.replace(/^\s*\-\s*/, '');
-					return { value, children: [] };
-				};
-				const fromLink = (l: LinkCache): SidebarBuilder => ({
-					value: l.link,
-					children: [],
-				 });
-
-				if (h.heading === 'Navbar') {
-					out.navbar = items.map(i => {
-						const link = linkOnLine(i.position.start.line);
-						return {
-							to: `docs/${link.link}`,
-							label: link.displayText || link.link,
-							position: "left",
-						};
-					});
-				} else if (h.heading === 'Sidebars') {
-					const roots: SidebarBuilder[] = [];
-					const index: { [key: string]: SidebarBuilder } = {};
-					items.forEach(i => {
-						const link = linkOnLine(i.position.start.line);
-						const si = link ? fromLink(link) : fromText(i);
-						index[i.position.start.line] = si;
-						if (i.parent > 0) {
-							index[i.parent].children.push(si);
-						} else {
-							roots.push(si);
-						}
-					});
-					out.sidebars = roots;
-				} else if (h.heading === 'Pages') {
-					out.pages = items.map(i => {
-						const link = linkOnLine(i.position.start.line);
-						return (link ? fromLink(link) : fromText(i)).value;
-					});
-				} else if (h.heading === 'Blog') {
-					out.blog = items.map(i => {
-						const link = linkOnLine(i.position.start.line);
-						return (link ? fromLink(link) : fromText(i)).value;
-					});
-				}
-			});
-
-			const vaultDir = (this.app.vault.adapter as FileSystemAdapter).getBasePath();
-			const repoDir = this.absRepoDir(this.settings.gitRepo);
-
-			// const linksToCopy = {};
-			// out.pages.forEach(p => linksToCopy[] = path.join(repoDir, 'src', 'pages'))
-			// 	copyLink())
-
-			const copyLink = (dir: string) => async (link: string) => {
-				const linkFile = this.app.metadataCache.getFirstLinkpathDest(link, record.path);
-				console.log('copying link', link, 'in', record.path, 'file', linkFile)
-				const cache = this.app.metadataCache.getFileCache(linkFile);
-
-				// Clean filenames.
-				let filepath = path.join(dir, clean(linkFile.path));
-
-				// Rename to `index.md` if slug is `/`.
-				if (cache.frontmatter?.slug === '/') {
-					filepath = path.join(dir, 'index.md');
-				}
-
-				// Replace wikilinks with Markdown links.
-				let content = await this.app.vault.read(linkFile);
-				cache.links && clone(cache.links).reverse().forEach(l => {
-					const before = content.substring(0, l.position.start.offset);
-					const after = content.substr(l.position.end.offset);
-					content = `${before}[${l.displayText || l.link}](${clean(l.link)})${after}`
-				});
-
-				fs.mkdirSync(path.dirname(filepath), { recursive: true })
-				const copy = fs.writeFileSync(
-					// path.join(vaultDir, linkFile.path),
-					filepath, content
-				);
-
-				git.add({ fs, dir: repoDir, filepath: path.relative(repoDir, filepath) });
-				return copy;
-			}
-			const toDocs = copyLink(path.join(repoDir, 'docs'));
-			await Promise.all(
-				// TODO: Rename copies of pages to their display text/slug. Record in registry to rewrite links.
-				out.pages.map(copyLink(path.join(repoDir, 'src', 'pages')))
-					.concat(out.blog.map(copyLink(path.join(repoDir, 'blog'))))
-					.concat(out.navbar.map(i => toDocs(i.to.substr(5))))
-				// .concat(copyLink(repoDir)(out.logo))
-				// .concat(copyLink(path.join(repoDir, "static"))(out.logo))
-			)
-			const sidebarLinks: (b: SidebarBuilder) => string[] = (b: SidebarBuilder) =>
-				b.children?.length ? flatten(b.children.map(sidebarLinks)) : [b.value];
-
-			out.sidebars.forEach(b => sidebarLinks(b).map(toDocs))
-
-			out.navbar = out.navbar.map(n => {
-				const target = this.app.metadataCache.getFirstLinkpathDest(n.to.substr(5), record.path);
-				const slug = this.app.metadataCache.getCache(target.path).frontmatter?.slug || target.path;
-				return { ...n, to: `docs${slug}` };
-			})
-			if (headings.some(h => h.heading === "Blog")) {
-				out.navbar.push({
-					to: "blog",
-					label: "Blog",
-					position: "left",
-				});
-			}
-
-			return out
-		}
-		const out = await Promise.all(Object.keys(content).map(prepare));
-		console.log(out);
-		out.forEach(c => this.write(c));
-	}
-
-	async write(content: Content) {
-		const dir = this.absRepoDir(this.settings.gitRepo);
-		const imgDir = path.join(dir, 'static', 'img');
-		const templateDir = path.join(this.absPluginDir(), 'src', 'template');
-		const logoRelDestPath = path.join('static', 'img', 'logo.png');
-		const logoDestPath = path.join(dir, logoRelDestPath);
-
-		const files: { [key: string]: string } = {
-			'.gitignore': gitignore(),
-			'package.json': packageJson(),
-			'babel.config.js': babelConfig(),
-			'docusaurus.config.js': docusaurusConfig({
-				title: content.title || this.settings.siteTitle || DEFAULT_SETTINGS.siteTitle,
-				url: this.settings.siteUrl || 'https://netlify.com',
-				other: {
-					repo: this.settings.gitRepo,
-					navbar: content.navbar,
-					logoSrc: logoRelDestPath,
-				}
-			}),
-			'sidebars.js': sidebars(content.sidebars),
-		};
-		// const copies: { [key: string]: string } = {
-		// [path.join(templateDir, 'logo-small.png')]: path.join(imgDir, 'favicon.png'),
-		// [path.join(templateDir, 'logo.png')]: path.join(dir, 'logo.png'),
-		// [path.join(content.logo]: logoDestPath,
-		// [content.logo]: path.join(imgDir, 'favicon.png'),
-		// };
-
-		fs.mkdirpSync(path.dirname(logoDestPath))
-		fs.copyFileSync(path.join(this.basePath(), content.logo.path), logoDestPath);
-
-		Object.keys(files).forEach(f => {
-			fs.writeFileSync(path.join(dir, f), files[f]);
-		});
-		// Object.keys(copies).forEach(from => {
-		// 	const to = copies[from];
-		// 	fs.mkdirpSync(path.dirname(to))
-		// 	fs.copyFileSync(from, to);
-		// });
-	}
-
-	deleteExported() {
-		const dir = this.absRepoDir(this.settings.gitRepo);
-		fs.emptyDirSync(path.join(dir, 'docs'));
-		fs.emptyDirSync(path.join(dir, 'blog'));
-		fs.emptyDirSync(path.join(dir, 'src', 'pages'));
-		fs.emptyDirSync(path.join(dir, 'static', 'img'));
-	}
+  deleteExported() {
+    const dir = this.absRepoDir(this.settings.gitRepo);
+    fs.emptyDirSync(join(dir, "docs"));
+    fs.emptyDirSync(join(dir, "blog"));
+    fs.emptyDirSync(join(dir, "src", "pages"));
+    fs.emptyDirSync(join(dir, "static", "img"));
+  }
 }
 
-function clean(name: string): string {
-	return name.replace(/\?/g, '_');
-}
+// function clean(name: string): string {
+//   return name.replace(/\?/g, "_");
+// }
 
 interface Content {
-	title?: string;
-	logo?: TFile;
-	navbar?: NavbarItem[];
-	sidebars?: SidebarBuilder[];
-	pages?: string[];
-	blog?: string[];
+  title?: string;
+  logo?: TFile;
+  navbar?: NavbarItem[];
+  sidebars?: SidebarBuilder[];
+  pages?: string[];
+  blog?: string[];
 }
 
 class SampleSettingTab extends PluginSettingTab {
-	plugin: MyPlugin;
+  plugin: MyPlugin;
 
-	constructor(app: App, plugin: MyPlugin) {
-		super(app, plugin);
-		this.plugin = plugin;
-	}
+  constructor(app: App, plugin: MyPlugin) {
+    super(app, plugin);
+    this.plugin = plugin;
+  }
 
-	display(): void {
-		let { containerEl } = this;
+  display(): void {
+    let { containerEl } = this;
 
-		containerEl.empty();
+    containerEl.empty();
 
-		// containerEl.createEl('h2', {text: 'Settings for my awesome plugin.'});
-
-		new Setting(containerEl)
-			.setName('Git repo')
-			.setDesc('URL to the Git repository to export to')
-			.addText(text => text
-				.setPlaceholder('https://github.com/you/repo')
-				.setValue(this.plugin.settings.gitRepo)
-				.onChange(async (value) => {
-					this.plugin.settings.gitRepo = value;
-					await this.plugin.saveSettings();
-				}));
-		new Setting(containerEl)
-			.setName('Site title')
-			.setDesc('Title of your exported website')
-			.addText(text => text
-				.setPlaceholder('My Obsidian Export')
-				.setValue(this.plugin.settings.siteTitle)
-				.onChange(async (value) => {
-					this.plugin.settings.siteTitle = value;
-					await this.plugin.saveSettings();
-				}));
-		new Setting(containerEl)
-			.setName('Site URL')
-			.setDesc('URL of the deployed website')
-			.addText(text => text
-				.setPlaceholder('https://mysite.com')
-				.setValue(this.plugin.settings.siteUrl)
-				.onChange(async (value) => {
-					this.plugin.settings.siteUrl = value;
-					await this.plugin.saveSettings();
-				}));
-	}
+    new Setting(containerEl)
+      .setName("Git repo")
+      .setDesc("URL to the Git repository to export to")
+      .addText((text) =>
+        text
+          .setPlaceholder("https://github.com/you/repo")
+          .setValue(this.plugin.settings.gitRepo)
+          .onChange(async (value) => {
+            this.plugin.settings.gitRepo = value;
+            await this.plugin.saveSettings();
+          })
+      );
+    new Setting(containerEl)
+      .setName("Export directory")
+      .setDesc("Path to the directory to export to")
+      .addText((text) =>
+        text
+          .setPlaceholder("~/path/to/dir")
+          .setValue(this.plugin.settings.exportDir)
+          .onChange(async (value) => {
+            this.plugin.settings.exportDir = value;
+            await this.plugin.saveSettings();
+          })
+      );
+    new Setting(containerEl)
+      .setName("Site title")
+      .setDesc("Title of your exported website")
+      .addText((text) =>
+        text
+          .setPlaceholder("My Obsidian Export")
+          .setValue(this.plugin.settings.siteTitle)
+          .onChange(async (value) => {
+            this.plugin.settings.siteTitle = value;
+            await this.plugin.saveSettings();
+          })
+      );
+    new Setting(containerEl)
+      .setName("Site URL")
+      .setDesc("URL of the deployed website")
+      .addText((text) =>
+        text
+          .setPlaceholder("https://mysite.com")
+          .setValue(this.plugin.settings.siteUrl)
+          .onChange(async (value) => {
+            this.plugin.settings.siteUrl = value;
+            await this.plugin.saveSettings();
+          })
+      );
+  }
 }

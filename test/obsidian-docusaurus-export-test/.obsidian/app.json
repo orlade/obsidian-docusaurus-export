@@ -1,0 +1,12 @@
+{
+  "spellcheck": true,
+  "showFrontmatter": true,
+  "showLineNumber": true,
+  "alwaysUpdateLinks": true,
+  "promptDelete": false,
+  "spellcheckDictionary": [
+    "Docusaurus",
+    "subdirectory",
+    "navbar"
+  ]
+}

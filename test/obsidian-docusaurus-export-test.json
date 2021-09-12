@@ -1,0 +1,1442 @@
+{
+  "vault.getMarkdownFiles()": [
+    {
+      "path": "Obsidian to Docusaurus Mapping.md",
+      "name": "Obsidian to Docusaurus Mapping.md",
+      "stat": {
+        "ctime": 1627625427772,
+        "mtime": 1627861508262,
+        "size": 1727
+      },
+      "basename": "Obsidian to Docusaurus Mapping",
+      "extension": "md",
+      "parent": {
+        "path": "/",
+        "name": "",
+        "parent": null
+      }
+    },
+    {
+      "path": "Structure.md",
+      "name": "Structure.md",
+      "stat": {
+        "ctime": 1625878934222,
+        "mtime": 1630213168075,
+        "size": 390
+      },
+      "basename": "Structure",
+      "extension": "md",
+      "parent": {
+        "path": "/",
+        "name": "",
+        "parent": null
+      }
+    },
+    {
+      "path": "Page Simple.md",
+      "name": "Page Simple.md",
+      "stat": {
+        "ctime": 1625879153954,
+        "mtime": 1625879184676,
+        "size": 14
+      },
+      "basename": "Page Simple",
+      "extension": "md",
+      "parent": {
+        "path": "/",
+        "name": "",
+        "parent": null
+      }
+    },
+    {
+      "path": "Docs Landing Page.md",
+      "name": "Docs Landing Page.md",
+      "stat": {
+        "ctime": 1625879003789,
+        "mtime": 1630213131138,
+        "size": 67
+      },
+      "basename": "Docs Landing Page",
+      "extension": "md",
+      "parent": {
+        "path": "/",
+        "name": "",
+        "parent": null
+      }
+    },
+    {
+      "path": "Blog Simple.md",
+      "name": "Blog Simple.md",
+      "stat": {
+        "ctime": 1625879158598,
+        "mtime": 1625879168047,
+        "size": 19
+      },
+      "basename": "Blog Simple",
+      "extension": "md",
+      "parent": {
+        "path": "/",
+        "name": "",
+        "parent": null
+      }
+    }
+  ],
+  "vault.read(*)": {
+    "Obsidian to Docusaurus Mapping.md": "Most of the logic of obsidian-docusaurus-export is mapping Obsidian concepts to Docusaurus concepts (or the same concepts in the appropriate format). This document describes the mapping.\n\n## Obsidian Concepts\n- **File**: a file on disk.\n- **Note**: a Markdown file.\n- **Folder**: a folder on disk.\n- **Vault**: all of the content under a root directory.\n- **Link**: Reference from a note to another file (usually another note).\n\n## Docusaurus Concepts\n- **Page**: A page of the website. Markdown file nested under the `pages` subdirectory.\n- **(Blog) Post**: basically a page, but part of the blog. Markdown file nested under the `blog` subdirectory.\n- **Navbar**: Describes the contents and structure of the navbar (menu on top of the website).\n- **Sidebars**: Describes the contents and structure of the sidebar (menu(s) on the left of the website, not the blog).\n- **Config**: describes the website and orchestrates the other components. `docusaurus.config.js`.\n\n## Plugin Concepts\n- **Site**: a website containing a subset of the content in a vault.\n- **Structure note**: a note describing the contents and structure of a side. The main input to the Docusaurus export logic.\n\n## Mapping\n### File to Page\n- name -> name\n\n### Vault to Site\n- Input: Structure doc\n\t- Notes in **Pages** section:\n\nPosts/Pages:\n- If no slug is present, generate and prepend one to remove capitals, spaces, special chars, etc. from name\n- TODO: One doc should be chosen as the `docs/` landing page.\n\nNavbar:\n- If there's any blog posts, add a Blog entry\n- Prepend `docs/` to each link unless the link only maps to a blog post\n- Some items will wants to link to roots, like `/docs` or `/blog`.\n\t- TODO some carveout for internal `href` type links.",
+    "Structure.md": "#docusaurus/test/_\n\n## Pages\n\n- [[Docs Landing Page]] @/\n- [[Page Simple]]\n- [[Obsidian to Docusaurus Mapping]]\n\n## Blog\n\n- [[Blog Simple]]\n\n## Navbar\n\n- [[Docs Landing Page|My Docs]]\n- Menu\n  - [[Docs Landing Page]]\n  - [[Docs Landing Page|Label]]\n\n## Sidebars\n\n- docs\n  - [[Docs Landing Page|Welcome]]\n  - [[Page Simple]]\n  - This Plugin\n    - [[Obsidian to Docusaurus Mapping|Mappings]]\n",
+    "Page Simple.md": "Simplest page.",
+    "Docs Landing Page.md": "---\nslug: /\n---\n\nThis is the landing page for the Docs navbar link.",
+    "Blog Simple.md": "Simplest blog post."
+  },
+  "metadataCache.getFirstLinkpathDest(*)": {
+    "Obsidian to Docusaurus Mapping.md": {},
+    "Structure.md": {
+      "Docs Landing Page": "Docs Landing Page.md",
+      "Page Simple": "Page Simple.md",
+      "Obsidian to Docusaurus Mapping": "Obsidian to Docusaurus Mapping.md",
+      "Blog Simple": "Blog Simple.md"
+    },
+    "Page Simple.md": {},
+    "Docs Landing Page.md": {},
+    "Blog Simple.md": {}
+  },
+  "metadataCache.getCache(*)": {
+    "Obsidian to Docusaurus Mapping.md": {
+      "headings": [
+        {
+          "heading": "Obsidian Concepts",
+          "level": 2,
+          "position": {
+            "start": {
+              "line": 2,
+              "col": 0,
+              "offset": 188
+            },
+            "end": {
+              "line": 2,
+              "col": 20,
+              "offset": 208
+            }
+          }
+        },
+        {
+          "heading": "Docusaurus Concepts",
+          "level": 2,
+          "position": {
+            "start": {
+              "line": 9,
+              "col": 0,
+              "offset": 429
+            },
+            "end": {
+              "line": 9,
+              "col": 22,
+              "offset": 451
+            }
+          }
+        },
+        {
+          "heading": "Plugin Concepts",
+          "level": 2,
+          "position": {
+            "start": {
+              "line": 16,
+              "col": 0,
+              "offset": 966
+            },
+            "end": {
+              "line": 16,
+              "col": 18,
+              "offset": 984
+            }
+          }
+        },
+        {
+          "heading": "Mapping",
+          "level": 2,
+          "position": {
+            "start": {
+              "line": 20,
+              "col": 0,
+              "offset": 1180
+            },
+            "end": {
+              "line": 20,
+              "col": 10,
+              "offset": 1190
+            }
+          }
+        },
+        {
+          "heading": "File to Page",
+          "level": 3,
+          "position": {
+            "start": {
+              "line": 21,
+              "col": 0,
+              "offset": 1191
+            },
+            "end": {
+              "line": 21,
+              "col": 16,
+              "offset": 1207
+            }
+          }
+        },
+        {
+          "heading": "Vault to Site",
+          "level": 3,
+          "position": {
+            "start": {
+              "line": 24,
+              "col": 0,
+              "offset": 1224
+            },
+            "end": {
+              "line": 24,
+              "col": 17,
+              "offset": 1241
+            }
+          }
+        }
+      ],
+      "sections": [
+        {
+          "type": "paragraph",
+          "position": {
+            "start": {
+              "line": 0,
+              "col": 0,
+              "offset": 0
+            },
+            "end": {
+              "line": 0,
+              "col": 186,
+              "offset": 186
+            }
+          }
+        },
+        {
+          "type": "heading",
+          "position": {
+            "start": {
+              "line": 2,
+              "col": 0,
+              "offset": 188
+            },
+            "end": {
+              "line": 2,
+              "col": 20,
+              "offset": 208
+            }
+          }
+        },
+        {
+          "type": "list",
+          "position": {
+            "start": {
+              "line": 3,
+              "col": 0,
+              "offset": 209
+            },
+            "end": {
+              "line": 7,
+              "col": 73,
+              "offset": 427
+            }
+          }
+        },
+        {
+          "type": "heading",
+          "position": {
+            "start": {
+              "line": 9,
+              "col": 0,
+              "offset": 429
+            },
+            "end": {
+              "line": 9,
+              "col": 22,
+              "offset": 451
+            }
+          }
+        },
+        {
+          "type": "list",
+          "position": {
+            "start": {
+              "line": 10,
+              "col": 0,
+              "offset": 452
+            },
+            "end": {
+              "line": 14,
+              "col": 98,
+              "offset": 964
+            }
+          }
+        },
+        {
+          "type": "heading",
+          "position": {
+            "start": {
+              "line": 16,
+              "col": 0,
+              "offset": 966
+            },
+            "end": {
+              "line": 16,
+              "col": 18,
+              "offset": 984
+            }
+          }
+        },
+        {
+          "type": "list",
+          "position": {
+            "start": {
+              "line": 17,
+              "col": 0,
+              "offset": 985
+            },
+            "end": {
+              "line": 18,
+              "col": 124,
+              "offset": 1178
+            }
+          }
+        },
+        {
+          "type": "heading",
+          "position": {
+            "start": {
+              "line": 20,
+              "col": 0,
+              "offset": 1180
+            },
+            "end": {
+              "line": 20,
+              "col": 10,
+              "offset": 1190
+            }
+          }
+        },
+        {
+          "type": "heading",
+          "position": {
+            "start": {
+              "line": 21,
+              "col": 0,
+              "offset": 1191
+            },
+            "end": {
+              "line": 21,
+              "col": 16,
+              "offset": 1207
+            }
+          }
+        },
+        {
+          "type": "list",
+          "position": {
+            "start": {
+              "line": 22,
+              "col": 0,
+              "offset": 1208
+            },
+            "end": {
+              "line": 22,
+              "col": 14,
+              "offset": 1222
+            }
+          }
+        },
+        {
+          "type": "heading",
+          "position": {
+            "start": {
+              "line": 24,
+              "col": 0,
+              "offset": 1224
+            },
+            "end": {
+              "line": 24,
+              "col": 17,
+              "offset": 1241
+            }
+          }
+        },
+        {
+          "type": "list",
+          "position": {
+            "start": {
+              "line": 25,
+              "col": 0,
+              "offset": 1242
+            },
+            "end": {
+              "line": 26,
+              "col": 30,
+              "offset": 1295
+            }
+          }
+        },
+        {
+          "type": "paragraph",
+          "position": {
+            "start": {
+              "line": 28,
+              "col": 0,
+              "offset": 1297
+            },
+            "end": {
+              "line": 28,
+              "col": 12,
+              "offset": 1309
+            }
+          }
+        },
+        {
+          "type": "list",
+          "position": {
+            "start": {
+              "line": 29,
+              "col": 0,
+              "offset": 1310
+            },
+            "end": {
+              "line": 30,
+              "col": 61,
+              "offset": 1479
+            }
+          }
+        },
+        {
+          "type": "paragraph",
+          "position": {
+            "start": {
+              "line": 32,
+              "col": 0,
+              "offset": 1481
+            },
+            "end": {
+              "line": 32,
+              "col": 7,
+              "offset": 1488
+            }
+          }
+        },
+        {
+          "type": "list",
+          "position": {
+            "start": {
+              "line": 33,
+              "col": 0,
+              "offset": 1489
+            },
+            "end": {
+              "line": 36,
+              "col": 53,
+              "offset": 1727
+            }
+          }
+        }
+      ],
+      "listItems": [
+        {
+          "parent": -3,
+          "position": {
+            "start": {
+              "line": 3,
+              "col": 0,
+              "offset": 209
+            },
+            "end": {
+              "line": 3,
+              "col": 27,
+              "offset": 236
+            }
+          }
+        },
+        {
+          "parent": -3,
+          "position": {
+            "start": {
+              "line": 4,
+              "col": 0,
+              "offset": 237
+            },
+            "end": {
+              "line": 4,
+              "col": 28,
+              "offset": 265
+            }
+          }
+        },
+        {
+          "parent": -3,
+          "position": {
+            "start": {
+              "line": 5,
+              "col": 0,
+              "offset": 266
+            },
+            "end": {
+              "line": 5,
+              "col": 31,
+              "offset": 297
+            }
+          }
+        },
+        {
+          "parent": -3,
+          "position": {
+            "start": {
+              "line": 6,
+              "col": 0,
+              "offset": 298
+            },
+            "end": {
+              "line": 6,
+              "col": 55,
+              "offset": 353
+            }
+          }
+        },
+        {
+          "parent": -3,
+          "position": {
+            "start": {
+              "line": 7,
+              "col": 0,
+              "offset": 354
+            },
+            "end": {
+              "line": 7,
+              "col": 73,
+              "offset": 427
+            }
+          }
+        },
+        {
+          "parent": -10,
+          "position": {
+            "start": {
+              "line": 10,
+              "col": 0,
+              "offset": 452
+            },
+            "end": {
+              "line": 10,
+              "col": 87,
+              "offset": 539
+            }
+          }
+        },
+        {
+          "parent": -10,
+          "position": {
+            "start": {
+              "line": 11,
+              "col": 0,
+              "offset": 540
+            },
+            "end": {
+              "line": 11,
+              "col": 110,
+              "offset": 650
+            }
+          }
+        },
+        {
+          "parent": -10,
+          "position": {
+            "start": {
+              "line": 12,
+              "col": 0,
+              "offset": 651
+            },
+            "end": {
+              "line": 12,
+              "col": 94,
+              "offset": 745
+            }
+          }
+        },
+        {
+          "parent": -10,
+          "position": {
+            "start": {
+              "line": 13,
+              "col": 0,
+              "offset": 746
+            },
+            "end": {
+              "line": 13,
+              "col": 119,
+              "offset": 865
+            }
+          }
+        },
+        {
+          "parent": -10,
+          "position": {
+            "start": {
+              "line": 14,
+              "col": 0,
+              "offset": 866
+            },
+            "end": {
+              "line": 14,
+              "col": 98,
+              "offset": 964
+            }
+          }
+        },
+        {
+          "parent": -17,
+          "position": {
+            "start": {
+              "line": 17,
+              "col": 0,
+              "offset": 985
+            },
+            "end": {
+              "line": 17,
+              "col": 68,
+              "offset": 1053
+            }
+          }
+        },
+        {
+          "parent": -17,
+          "position": {
+            "start": {
+              "line": 18,
+              "col": 0,
+              "offset": 1054
+            },
+            "end": {
+              "line": 18,
+              "col": 124,
+              "offset": 1178
+            }
+          }
+        },
+        {
+          "parent": -22,
+          "position": {
+            "start": {
+              "line": 22,
+              "col": 0,
+              "offset": 1208
+            },
+            "end": {
+              "line": 22,
+              "col": 14,
+              "offset": 1222
+            }
+          }
+        },
+        {
+          "parent": -25,
+          "position": {
+            "start": {
+              "line": 25,
+              "col": 0,
+              "offset": 1242
+            },
+            "end": {
+              "line": 25,
+              "col": 22,
+              "offset": 1264
+            }
+          }
+        },
+        {
+          "parent": 25,
+          "position": {
+            "start": {
+              "line": 26,
+              "col": 1,
+              "offset": 1266
+            },
+            "end": {
+              "line": 26,
+              "col": 30,
+              "offset": 1295
+            }
+          }
+        },
+        {
+          "parent": -29,
+          "position": {
+            "start": {
+              "line": 29,
+              "col": 0,
+              "offset": 1310
+            },
+            "end": {
+              "line": 29,
+              "col": 107,
+              "offset": 1417
+            }
+          }
+        },
+        {
+          "parent": -29,
+          "position": {
+            "start": {
+              "line": 30,
+              "col": 0,
+              "offset": 1418
+            },
+            "end": {
+              "line": 30,
+              "col": 61,
+              "offset": 1479
+            }
+          }
+        },
+        {
+          "parent": -33,
+          "position": {
+            "start": {
+              "line": 33,
+              "col": 0,
+              "offset": 1489
+            },
+            "end": {
+              "line": 33,
+              "col": 45,
+              "offset": 1534
+            }
+          }
+        },
+        {
+          "parent": -33,
+          "position": {
+            "start": {
+              "line": 34,
+              "col": 0,
+              "offset": 1535
+            },
+            "end": {
+              "line": 34,
+              "col": 71,
+              "offset": 1606
+            }
+          }
+        },
+        {
+          "parent": -33,
+          "position": {
+            "start": {
+              "line": 35,
+              "col": 0,
+              "offset": 1607
+            },
+            "end": {
+              "line": 35,
+              "col": 66,
+              "offset": 1673
+            }
+          }
+        },
+        {
+          "parent": 35,
+          "position": {
+            "start": {
+              "line": 36,
+              "col": 1,
+              "offset": 1675
+            },
+            "end": {
+              "line": 36,
+              "col": 53,
+              "offset": 1727
+            }
+          }
+        }
+      ]
+    },
+    "Structure.md": {
+      "links": [
+        {
+          "link": "Docs Landing Page",
+          "original": "[[Docs Landing Page]]",
+          "displayText": "Docs Landing Page",
+          "position": {
+            "start": {
+              "line": 4,
+              "col": 2,
+              "offset": 32
+            },
+            "end": {
+              "line": 4,
+              "col": 23,
+              "offset": 53
+            }
+          }
+        },
+        {
+          "link": "Page Simple",
+          "original": "[[Page Simple]]",
+          "displayText": "Page Simple",
+          "position": {
+            "start": {
+              "line": 5,
+              "col": 2,
+              "offset": 59
+            },
+            "end": {
+              "line": 5,
+              "col": 17,
+              "offset": 74
+            }
+          }
+        },
+        {
+          "link": "Obsidian to Docusaurus Mapping",
+          "original": "[[Obsidian to Docusaurus Mapping]]",
+          "displayText": "Obsidian to Docusaurus Mapping",
+          "position": {
+            "start": {
+              "line": 6,
+              "col": 2,
+              "offset": 77
+            },
+            "end": {
+              "line": 6,
+              "col": 36,
+              "offset": 111
+            }
+          }
+        },
+        {
+          "link": "Blog Simple",
+          "original": "[[Blog Simple]]",
+          "displayText": "Blog Simple",
+          "position": {
+            "start": {
+              "line": 10,
+              "col": 2,
+              "offset": 124
+            },
+            "end": {
+              "line": 10,
+              "col": 17,
+              "offset": 139
+            }
+          }
+        },
+        {
+          "link": "Docs Landing Page",
+          "original": "[[Docs Landing Page|My Docs]]",
+          "displayText": "My Docs",
+          "position": {
+            "start": {
+              "line": 14,
+              "col": 2,
+              "offset": 154
+            },
+            "end": {
+              "line": 14,
+              "col": 31,
+              "offset": 183
+            }
+          }
+        },
+        {
+          "link": "Docs Landing Page",
+          "original": "[[Docs Landing Page]]",
+          "displayText": "Docs Landing Page",
+          "position": {
+            "start": {
+              "line": 16,
+              "col": 4,
+              "offset": 195
+            },
+            "end": {
+              "line": 16,
+              "col": 25,
+              "offset": 216
+            }
+          }
+        },
+        {
+          "link": "Docs Landing Page",
+          "original": "[[Docs Landing Page|Label]]",
+          "displayText": "Label",
+          "position": {
+            "start": {
+              "line": 17,
+              "col": 4,
+              "offset": 221
+            },
+            "end": {
+              "line": 17,
+              "col": 31,
+              "offset": 248
+            }
+          }
+        },
+        {
+          "link": "Docs Landing Page",
+          "original": "[[Docs Landing Page|Welcome]]",
+          "displayText": "Welcome",
+          "position": {
+            "start": {
+              "line": 22,
+              "col": 4,
+              "offset": 274
+            },
+            "end": {
+              "line": 22,
+              "col": 33,
+              "offset": 303
+            }
+          }
+        },
+        {
+          "link": "Page Simple",
+          "original": "[[Page Simple]]",
+          "displayText": "Page Simple",
+          "position": {
+            "start": {
+              "line": 23,
+              "col": 4,
+              "offset": 308
+            },
+            "end": {
+              "line": 23,
+              "col": 19,
+              "offset": 323
+            }
+          }
+        },
+        {
+          "link": "Obsidian to Docusaurus Mapping",
+          "original": "[[Obsidian to Docusaurus Mapping|Mappings]]",
+          "displayText": "Mappings",
+          "position": {
+            "start": {
+              "line": 25,
+              "col": 6,
+              "offset": 346
+            },
+            "end": {
+              "line": 25,
+              "col": 49,
+              "offset": 389
+            }
+          }
+        }
+      ],
+      "tags": [
+        {
+          "tag": "#docusaurus/test/_",
+          "position": {
+            "start": {
+              "line": 0,
+              "col": 0,
+              "offset": 0
+            },
+            "end": {
+              "line": 0,
+              "col": 18,
+              "offset": 18
+            }
+          }
+        }
+      ],
+      "headings": [
+        {
+          "heading": "Pages",
+          "level": 2,
+          "position": {
+            "start": {
+              "line": 2,
+              "col": 0,
+              "offset": 20
+            },
+            "end": {
+              "line": 2,
+              "col": 8,
+              "offset": 28
+            }
+          }
+        },
+        {
+          "heading": "Blog",
+          "level": 2,
+          "position": {
+            "start": {
+              "line": 8,
+              "col": 0,
+              "offset": 113
+            },
+            "end": {
+              "line": 8,
+              "col": 7,
+              "offset": 120
+            }
+          }
+        },
+        {
+          "heading": "Navbar",
+          "level": 2,
+          "position": {
+            "start": {
+              "line": 12,
+              "col": 0,
+              "offset": 141
+            },
+            "end": {
+              "line": 12,
+              "col": 9,
+              "offset": 150
+            }
+          }
+        },
+        {
+          "heading": "Sidebars",
+          "level": 2,
+          "position": {
+            "start": {
+              "line": 19,
+              "col": 0,
+              "offset": 250
+            },
+            "end": {
+              "line": 19,
+              "col": 11,
+              "offset": 261
+            }
+          }
+        }
+      ],
+      "sections": [
+        {
+          "type": "paragraph",
+          "position": {
+            "start": {
+              "line": 0,
+              "col": 0,
+              "offset": 0
+            },
+            "end": {
+              "line": 0,
+              "col": 18,
+              "offset": 18
+            }
+          }
+        },
+        {
+          "type": "heading",
+          "position": {
+            "start": {
+              "line": 2,
+              "col": 0,
+              "offset": 20
+            },
+            "end": {
+              "line": 2,
+              "col": 8,
+              "offset": 28
+            }
+          }
+        },
+        {
+          "type": "list",
+          "position": {
+            "start": {
+              "line": 4,
+              "col": 0,
+              "offset": 30
+            },
+            "end": {
+              "line": 6,
+              "col": 36,
+              "offset": 111
+            }
+          }
+        },
+        {
+          "type": "heading",
+          "position": {
+            "start": {
+              "line": 8,
+              "col": 0,
+              "offset": 113
+            },
+            "end": {
+              "line": 8,
+              "col": 7,
+              "offset": 120
+            }
+          }
+        },
+        {
+          "type": "list",
+          "position": {
+            "start": {
+              "line": 10,
+              "col": 0,
+              "offset": 122
+            },
+            "end": {
+              "line": 10,
+              "col": 17,
+              "offset": 139
+            }
+          }
+        },
+        {
+          "type": "heading",
+          "position": {
+            "start": {
+              "line": 12,
+              "col": 0,
+              "offset": 141
+            },
+            "end": {
+              "line": 12,
+              "col": 9,
+              "offset": 150
+            }
+          }
+        },
+        {
+          "type": "list",
+          "position": {
+            "start": {
+              "line": 14,
+              "col": 0,
+              "offset": 152
+            },
+            "end": {
+              "line": 17,
+              "col": 31,
+              "offset": 248
+            }
+          }
+        },
+        {
+          "type": "heading",
+          "position": {
+            "start": {
+              "line": 19,
+              "col": 0,
+              "offset": 250
+            },
+            "end": {
+              "line": 19,
+              "col": 11,
+              "offset": 261
+            }
+          }
+        },
+        {
+          "type": "list",
+          "position": {
+            "start": {
+              "line": 21,
+              "col": 0,
+              "offset": 263
+            },
+            "end": {
+              "line": 25,
+              "col": 49,
+              "offset": 389
+            }
+          }
+        }
+      ],
+      "listItems": [
+        {
+          "parent": -4,
+          "position": {
+            "start": {
+              "line": 4,
+              "col": 0,
+              "offset": 30
+            },
+            "end": {
+              "line": 4,
+              "col": 26,
+              "offset": 56
+            }
+          }
+        },
+        {
+          "parent": -4,
+          "position": {
+            "start": {
+              "line": 5,
+              "col": 0,
+              "offset": 57
+            },
+            "end": {
+              "line": 5,
+              "col": 17,
+              "offset": 74
+            }
+          }
+        },
+        {
+          "parent": -4,
+          "position": {
+            "start": {
+              "line": 6,
+              "col": 0,
+              "offset": 75
+            },
+            "end": {
+              "line": 6,
+              "col": 36,
+              "offset": 111
+            }
+          }
+        },
+        {
+          "parent": -10,
+          "position": {
+            "start": {
+              "line": 10,
+              "col": 0,
+              "offset": 122
+            },
+            "end": {
+              "line": 10,
+              "col": 17,
+              "offset": 139
+            }
+          }
+        },
+        {
+          "parent": -14,
+          "position": {
+            "start": {
+              "line": 14,
+              "col": 0,
+              "offset": 152
+            },
+            "end": {
+              "line": 14,
+              "col": 31,
+              "offset": 183
+            }
+          }
+        },
+        {
+          "parent": -14,
+          "position": {
+            "start": {
+              "line": 15,
+              "col": 0,
+              "offset": 184
+            },
+            "end": {
+              "line": 15,
+              "col": 6,
+              "offset": 190
+            }
+          }
+        },
+        {
+          "parent": 15,
+          "position": {
+            "start": {
+              "line": 16,
+              "col": 2,
+              "offset": 193
+            },
+            "end": {
+              "line": 16,
+              "col": 25,
+              "offset": 216
+            }
+          }
+        },
+        {
+          "parent": 15,
+          "position": {
+            "start": {
+              "line": 17,
+              "col": 2,
+              "offset": 219
+            },
+            "end": {
+              "line": 17,
+              "col": 31,
+              "offset": 248
+            }
+          }
+        },
+        {
+          "parent": -21,
+          "position": {
+            "start": {
+              "line": 21,
+              "col": 0,
+              "offset": 263
+            },
+            "end": {
+              "line": 21,
+              "col": 6,
+              "offset": 269
+            }
+          }
+        },
+        {
+          "parent": 21,
+          "position": {
+            "start": {
+              "line": 22,
+              "col": 2,
+              "offset": 272
+            },
+            "end": {
+              "line": 22,
+              "col": 33,
+              "offset": 303
+            }
+          }
+        },
+        {
+          "parent": 21,
+          "position": {
+            "start": {
+              "line": 23,
+              "col": 2,
+              "offset": 306
+            },
+            "end": {
+              "line": 23,
+              "col": 19,
+              "offset": 323
+            }
+          }
+        },
+        {
+          "parent": 21,
+          "position": {
+            "start": {
+              "line": 24,
+              "col": 2,
+              "offset": 326
+            },
+            "end": {
+              "line": 24,
+              "col": 15,
+              "offset": 339
+            }
+          }
+        },
+        {
+          "parent": 24,
+          "position": {
+            "start": {
+              "line": 25,
+              "col": 4,
+              "offset": 344
+            },
+            "end": {
+              "line": 25,
+              "col": 49,
+              "offset": 389
+            }
+          }
+        }
+      ]
+    },
+    "Page Simple.md": {
+      "sections": [
+        {
+          "type": "paragraph",
+          "position": {
+            "start": {
+              "line": 0,
+              "col": 0,
+              "offset": 0
+            },
+            "end": {
+              "line": 0,
+              "col": 14,
+              "offset": 14
+            }
+          }
+        }
+      ]
+    },
+    "Docs Landing Page.md": {
+      "sections": [
+        {
+          "type": "yaml",
+          "position": {
+            "start": {
+              "line": 0,
+              "col": 0,
+              "offset": 0
+            },
+            "end": {
+              "line": 2,
+              "col": 3,
+              "offset": 15
+            }
+          }
+        },
+        {
+          "type": "paragraph",
+          "position": {
+            "start": {
+              "line": 4,
+              "col": 0,
+              "offset": 17
+            },
+            "end": {
+              "line": 4,
+              "col": 50,
+              "offset": 67
+            }
+          }
+        }
+      ],
+      "frontmatter": {
+        "slug": "/",
+        "position": {
+          "start": {
+            "line": 0,
+            "col": 0,
+            "offset": 0
+          },
+          "end": {
+            "line": 2,
+            "col": 3,
+            "offset": 15
+          }
+        }
+      }
+    },
+    "Blog Simple.md": {
+      "sections": [
+        {
+          "type": "paragraph",
+          "position": {
+            "start": {
+              "line": 0,
+              "col": 0,
+              "offset": 0
+            },
+            "end": {
+              "line": 0,
+              "col": 19,
+              "offset": 19
+            }
+          }
+        }
+      ]
+    }
+  }
+}

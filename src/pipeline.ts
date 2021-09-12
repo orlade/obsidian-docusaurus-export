@@ -90,7 +90,6 @@ export class SiteBuilder {
         const before = doc.content.substring(0, l.position.start.offset);
         const after = doc.content.substr(l.position.end.offset);
 
-        // TODO: Check if target pages are in export set.
         const tmp: TreeLeaf = { sourcePath: l.link + ".md", label: "" };
         categorize([tmp], site);
         if (tmp.category) {
@@ -99,6 +98,8 @@ export class SiteBuilder {
           const href = prefix + (slug || clean(l.link)).replace(/ /g, "%20");
           doc.content = `${before}[${l.displayText || l.link}](${href})${after}`;
         } else {
+          // Remove links to docs that aren't exported.
+          // TODO: Check more explicitly.
           doc.content = `${before}${l.displayText || l.link}${after}`;
         }
       });

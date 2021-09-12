@@ -2,7 +2,7 @@
 
 ## Pages
 
-- [[Docs Landing Page]] @/
+- [[Docs Landing Page]]
 - [[Page Simple]]
 - [[Page Links]]
 - [[Page Slug]]

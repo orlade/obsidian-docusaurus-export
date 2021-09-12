@@ -76,25 +76,32 @@ export class SiteBuilder {
   /** Replaces wikilinks with Markdown links. */
   async replaceLinks(doc: Document, site: Site): Promise<void> {
     const meta = await this.store.getMetadata(ref(doc.sourcePath));
-    meta.links &&
-      clone(meta.links)
-        .reverse()
-        .forEach((l) => {
-          const before = doc.content.substring(0, l.position.start.offset);
-          const after = doc.content.substr(l.position.end.offset);
+    const links = meta.links || [];
+    const targetMetas = {};
+    await Promise.all(
+      links.map(
+        async (l) => (targetMetas[l.link] = await this.store.getMetadata(ref(l.link + ".md")))
+      )
+    );
 
-          // TODO: Check if target pages are in export set.
-          const tmp: TreeLeaf = { sourcePath: l.link + ".md", label: "" };
-          categorize([tmp], site);
-          let prefix: string;
-          if (tmp.category) {
-            const prefix = tmp.category === "blog" ? "/blog/" : "/docs/";
-            const href = prefix + clean(l.link).replace(/ /g, "%20");
-            doc.content = `${before}[${l.displayText || l.link}](${href})${after}`;
-          } else {
-            doc.content = `${before}${l.displayText || l.link}${after}`;
-          }
-        });
+    clone(meta.links || [])
+      .reverse()
+      .map((l) => {
+        const before = doc.content.substring(0, l.position.start.offset);
+        const after = doc.content.substr(l.position.end.offset);
+
+        // TODO: Check if target pages are in export set.
+        const tmp: TreeLeaf = { sourcePath: l.link + ".md", label: "" };
+        categorize([tmp], site);
+        if (tmp.category) {
+          const prefix = tmp.category === "blog" ? "/blog/" : "/docs/";
+          const slug = targetMetas[l.link].frontmatter?.slug?.replace(/^\//, "");
+          const href = prefix + (slug || clean(l.link)).replace(/ /g, "%20");
+          doc.content = `${before}[${l.displayText || l.link}](${href})${after}`;
+        } else {
+          doc.content = `${before}${l.displayText || l.link}${after}`;
+        }
+      });
   }
 
   async build({ title = "", path, repo, url }): Promise<Site> {

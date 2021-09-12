@@ -1,14 +1,14 @@
 {
   "vault.getMarkdownFiles()": [
     {
-      "path": "Page Links.md",
-      "name": "Page Links.md",
+      "path": "Structure.md",
+      "name": "Structure.md",
       "stat": {
-        "ctime": 1631443883414,
-        "mtime": 1631444080246,
-        "size": 66
+        "ctime": 1625878934222,
+        "mtime": 1631447461286,
+        "size": 460
       },
-      "basename": "Page Links",
+      "basename": "Structure",
       "extension": "md",
       "parent": {
         "path": "/",
@@ -17,14 +17,14 @@
       }
     },
     {
-      "path": "Structure.md",
-      "name": "Structure.md",
+      "path": "Page Slug.md",
+      "name": "Page Slug.md",
       "stat": {
-        "ctime": 1625878934222,
-        "mtime": 1631443883428,
-        "size": 407
+        "ctime": 1631447079086,
+        "mtime": 1631447092907,
+        "size": 29
       },
-      "basename": "Structure",
+      "basename": "Page Slug",
       "extension": "md",
       "parent": {
         "path": "/",
@@ -41,6 +41,22 @@
         "size": 14
       },
       "basename": "Page Simple",
+      "extension": "md",
+      "parent": {
+        "path": "/",
+        "name": "",
+        "parent": null
+      }
+    },
+    {
+      "path": "Page Links.md",
+      "name": "Page Links.md",
+      "stat": {
+        "ctime": 1631443883414,
+        "mtime": 1631447137709,
+        "size": 82
+      },
+      "basename": "Page Links",
       "extension": "md",
       "parent": {
         "path": "/",
@@ -98,35 +114,829 @@
     }
   ],
   "vault.read(*)": {
-    "Page Links.md": "Page with links.\n\n[[Page Simple]]\n\n[[Blog Simple]]\n\n[[Page Links]]",
-    "Structure.md": "#docusaurus/test/_\n\n## Pages\n\n- [[Docs Landing Page]] @/\n- [[Page Simple]]\n- [[Page Links]]\n- [[Obsidian to Docusaurus Mapping]]\n\n## Blog\n\n- [[Blog Simple]]\n\n## Navbar\n\n- [[Docs Landing Page|My Docs]]\n- Menu\n  - [[Docs Landing Page]]\n  - [[Docs Landing Page|Label]]\n\n## Sidebars\n\n- docs\n  - [[Docs Landing Page|Welcome]]\n  - [[Page Simple]]\n  - This Plugin\n    - [[Obsidian to Docusaurus Mapping|Mappings]]\n",
+    "Structure.md": "#docusaurus/test/_\n\n## Pages\n\n- [[Docs Landing Page]] @/\n- [[Page Simple]]\n- [[Page Links]]\n- [[Page Slug]]\n- [[Obsidian to Docusaurus Mapping]]\n\n## Blog\n\n- [[Blog Simple]]\n\n## Navbar\n\n- [[Docs Landing Page|My Docs]]\n- Menu\n  - [[Docs Landing Page]]\n  - [[Docs Landing Page|Label]]\n\n## Sidebars\n\n- docs\n  - [[Docs Landing Page|Welcome]]\n  - [[Page Simple]]\n  - [[Page Links]]\n  - [[Page Slug]]\n  - This Plugin\n    - [[Obsidian to Docusaurus Mapping|Mappings]]\n",
+    "Page Slug.md": "---\nslug: /slug\n---\n\nSlugged.",
     "Page Simple.md": "Simplest page.",
+    "Page Links.md": "Page with links.\n\n[[Page Simple]]\n\n[[Page Links]]\n\n[[Page Slug]]\n\n[[Blog Simple]]\n",
     "Obsidian to Docusaurus Mapping.md": "Most of the logic of obsidian-docusaurus-export is mapping Obsidian concepts to Docusaurus concepts (or the same concepts in the appropriate format). This document describes the mapping.\n\n## Obsidian Concepts\n- **File**: a file on disk.\n- **Note**: a Markdown file.\n- **Folder**: a folder on disk.\n- **Vault**: all of the content under a root directory.\n- **Link**: Reference from a note to another file (usually another note).\n\n## Docusaurus Concepts\n- **Page**: A page of the website. Markdown file nested under the `pages` subdirectory.\n- **(Blog) Post**: basically a page, but part of the blog. Markdown file nested under the `blog` subdirectory.\n- **Navbar**: Describes the contents and structure of the navbar (menu on top of the website).\n- **Sidebars**: Describes the contents and structure of the sidebar (menu(s) on the left of the website, not the blog).\n- **Config**: describes the website and orchestrates the other components. `docusaurus.config.js`.\n\n## Plugin Concepts\n- **Site**: a website containing a subset of the content in a vault.\n- **Structure note**: a note describing the contents and structure of a side. The main input to the Docusaurus export logic.\n\n## Mapping\n### File to Page\n- name -> name\n\n### Vault to Site\n- Input: Structure doc\n\t- Notes in **Pages** section:\n\nPosts/Pages:\n- If no slug is present, generate and prepend one to remove capitals, spaces, special chars, etc. from name\n- TODO: One doc should be chosen as the `docs/` landing page.\n\nNavbar:\n- If there's any blog posts, add a Blog entry\n- Prepend `docs/` to each link unless the link only maps to a blog post\n- Some items will wants to link to roots, like `/docs` or `/blog`.\n\t- TODO some carveout for internal `href` type links.\n\n\n```mermaid\n\n```",
     "Docs Landing Page.md": "---\nslug: /\n---\n\nThis is the landing page for the Docs navbar link.",
     "Blog Simple.md": "Simplest blog post."
   },
   "metadataCache.getFirstLinkpathDest(*)": {
-    "Page Links.md": {
-      "Page Simple": "Page Simple.md",
-      "Blog Simple": "Blog Simple.md",
-      "Page Links": "Page Links.md"
-    },
     "Structure.md": {
       "Docs Landing Page": "Docs Landing Page.md",
       "Page Simple": "Page Simple.md",
       "Page Links": "Page Links.md",
+      "Page Slug": "Page Slug.md",
       "Obsidian to Docusaurus Mapping": "Obsidian to Docusaurus Mapping.md",
       "Blog Simple": "Blog Simple.md"
     },
+    "Page Slug.md": {},
     "Page Simple.md": {},
+    "Page Links.md": {
+      "Page Simple": "Page Simple.md",
+      "Page Links": "Page Links.md",
+      "Page Slug": "Page Slug.md",
+      "Blog Simple": "Blog Simple.md"
+    },
     "Obsidian to Docusaurus Mapping.md": {},
     "Docs Landing Page.md": {},
     "Blog Simple.md": {}
   },
   "metadataCache.getCache(*)": {
+    "Structure.md": {
+      "links": [
+        {
+          "link": "Docs Landing Page",
+          "original": "[[Docs Landing Page]]",
+          "displayText": "Docs Landing Page",
+          "position": {
+            "start": {
+              "line": 4,
+              "col": 2,
+              "offset": 32
+            },
+            "end": {
+              "line": 4,
+              "col": 23,
+              "offset": 53
+            }
+          }
+        },
+        {
+          "link": "Page Simple",
+          "original": "[[Page Simple]]",
+          "displayText": "Page Simple",
+          "position": {
+            "start": {
+              "line": 5,
+              "col": 2,
+              "offset": 59
+            },
+            "end": {
+              "line": 5,
+              "col": 17,
+              "offset": 74
+            }
+          }
+        },
+        {
+          "link": "Page Links",
+          "original": "[[Page Links]]",
+          "displayText": "Page Links",
+          "position": {
+            "start": {
+              "line": 6,
+              "col": 2,
+              "offset": 77
+            },
+            "end": {
+              "line": 6,
+              "col": 16,
+              "offset": 91
+            }
+          }
+        },
+        {
+          "link": "Page Slug",
+          "original": "[[Page Slug]]",
+          "displayText": "Page Slug",
+          "position": {
+            "start": {
+              "line": 7,
+              "col": 2,
+              "offset": 94
+            },
+            "end": {
+              "line": 7,
+              "col": 15,
+              "offset": 107
+            }
+          }
+        },
+        {
+          "link": "Obsidian to Docusaurus Mapping",
+          "original": "[[Obsidian to Docusaurus Mapping]]",
+          "displayText": "Obsidian to Docusaurus Mapping",
+          "position": {
+            "start": {
+              "line": 8,
+              "col": 2,
+              "offset": 110
+            },
+            "end": {
+              "line": 8,
+              "col": 36,
+              "offset": 144
+            }
+          }
+        },
+        {
+          "link": "Blog Simple",
+          "original": "[[Blog Simple]]",
+          "displayText": "Blog Simple",
+          "position": {
+            "start": {
+              "line": 12,
+              "col": 2,
+              "offset": 157
+            },
+            "end": {
+              "line": 12,
+              "col": 17,
+              "offset": 172
+            }
+          }
+        },
+        {
+          "link": "Docs Landing Page",
+          "original": "[[Docs Landing Page|My Docs]]",
+          "displayText": "My Docs",
+          "position": {
+            "start": {
+              "line": 16,
+              "col": 2,
+              "offset": 187
+            },
+            "end": {
+              "line": 16,
+              "col": 31,
+              "offset": 216
+            }
+          }
+        },
+        {
+          "link": "Docs Landing Page",
+          "original": "[[Docs Landing Page]]",
+          "displayText": "Docs Landing Page",
+          "position": {
+            "start": {
+              "line": 18,
+              "col": 4,
+              "offset": 228
+            },
+            "end": {
+              "line": 18,
+              "col": 25,
+              "offset": 249
+            }
+          }
+        },
+        {
+          "link": "Docs Landing Page",
+          "original": "[[Docs Landing Page|Label]]",
+          "displayText": "Label",
+          "position": {
+            "start": {
+              "line": 19,
+              "col": 4,
+              "offset": 254
+            },
+            "end": {
+              "line": 19,
+              "col": 31,
+              "offset": 281
+            }
+          }
+        },
+        {
+          "link": "Docs Landing Page",
+          "original": "[[Docs Landing Page|Welcome]]",
+          "displayText": "Welcome",
+          "position": {
+            "start": {
+              "line": 24,
+              "col": 4,
+              "offset": 307
+            },
+            "end": {
+              "line": 24,
+              "col": 33,
+              "offset": 336
+            }
+          }
+        },
+        {
+          "link": "Page Simple",
+          "original": "[[Page Simple]]",
+          "displayText": "Page Simple",
+          "position": {
+            "start": {
+              "line": 25,
+              "col": 4,
+              "offset": 341
+            },
+            "end": {
+              "line": 25,
+              "col": 19,
+              "offset": 356
+            }
+          }
+        },
+        {
+          "link": "Page Links",
+          "original": "[[Page Links]]",
+          "displayText": "Page Links",
+          "position": {
+            "start": {
+              "line": 26,
+              "col": 4,
+              "offset": 361
+            },
+            "end": {
+              "line": 26,
+              "col": 18,
+              "offset": 375
+            }
+          }
+        },
+        {
+          "link": "Page Slug",
+          "original": "[[Page Slug]]",
+          "displayText": "Page Slug",
+          "position": {
+            "start": {
+              "line": 27,
+              "col": 4,
+              "offset": 380
+            },
+            "end": {
+              "line": 27,
+              "col": 17,
+              "offset": 393
+            }
+          }
+        },
+        {
+          "link": "Obsidian to Docusaurus Mapping",
+          "original": "[[Obsidian to Docusaurus Mapping|Mappings]]",
+          "displayText": "Mappings",
+          "position": {
+            "start": {
+              "line": 29,
+              "col": 6,
+              "offset": 416
+            },
+            "end": {
+              "line": 29,
+              "col": 49,
+              "offset": 459
+            }
+          }
+        }
+      ],
+      "tags": [
+        {
+          "tag": "#docusaurus/test/_",
+          "position": {
+            "start": {
+              "line": 0,
+              "col": 0,
+              "offset": 0
+            },
+            "end": {
+              "line": 0,
+              "col": 18,
+              "offset": 18
+            }
+          }
+        }
+      ],
+      "headings": [
+        {
+          "heading": "Pages",
+          "level": 2,
+          "position": {
+            "start": {
+              "line": 2,
+              "col": 0,
+              "offset": 20
+            },
+            "end": {
+              "line": 2,
+              "col": 8,
+              "offset": 28
+            }
+          }
+        },
+        {
+          "heading": "Blog",
+          "level": 2,
+          "position": {
+            "start": {
+              "line": 10,
+              "col": 0,
+              "offset": 146
+            },
+            "end": {
+              "line": 10,
+              "col": 7,
+              "offset": 153
+            }
+          }
+        },
+        {
+          "heading": "Navbar",
+          "level": 2,
+          "position": {
+            "start": {
+              "line": 14,
+              "col": 0,
+              "offset": 174
+            },
+            "end": {
+              "line": 14,
+              "col": 9,
+              "offset": 183
+            }
+          }
+        },
+        {
+          "heading": "Sidebars",
+          "level": 2,
+          "position": {
+            "start": {
+              "line": 21,
+              "col": 0,
+              "offset": 283
+            },
+            "end": {
+              "line": 21,
+              "col": 11,
+              "offset": 294
+            }
+          }
+        }
+      ],
+      "sections": [
+        {
+          "type": "paragraph",
+          "position": {
+            "start": {
+              "line": 0,
+              "col": 0,
+              "offset": 0
+            },
+            "end": {
+              "line": 0,
+              "col": 18,
+              "offset": 18
+            }
+          }
+        },
+        {
+          "type": "heading",
+          "position": {
+            "start": {
+              "line": 2,
+              "col": 0,
+              "offset": 20
+            },
+            "end": {
+              "line": 2,
+              "col": 8,
+              "offset": 28
+            }
+          }
+        },
+        {
+          "type": "list",
+          "position": {
+            "start": {
+              "line": 4,
+              "col": 0,
+              "offset": 30
+            },
+            "end": {
+              "line": 8,
+              "col": 36,
+              "offset": 144
+            }
+          }
+        },
+        {
+          "type": "heading",
+          "position": {
+            "start": {
+              "line": 10,
+              "col": 0,
+              "offset": 146
+            },
+            "end": {
+              "line": 10,
+              "col": 7,
+              "offset": 153
+            }
+          }
+        },
+        {
+          "type": "list",
+          "position": {
+            "start": {
+              "line": 12,
+              "col": 0,
+              "offset": 155
+            },
+            "end": {
+              "line": 12,
+              "col": 17,
+              "offset": 172
+            }
+          }
+        },
+        {
+          "type": "heading",
+          "position": {
+            "start": {
+              "line": 14,
+              "col": 0,
+              "offset": 174
+            },
+            "end": {
+              "line": 14,
+              "col": 9,
+              "offset": 183
+            }
+          }
+        },
+        {
+          "type": "list",
+          "position": {
+            "start": {
+              "line": 16,
+              "col": 0,
+              "offset": 185
+            },
+            "end": {
+              "line": 19,
+              "col": 31,
+              "offset": 281
+            }
+          }
+        },
+        {
+          "type": "heading",
+          "position": {
+            "start": {
+              "line": 21,
+              "col": 0,
+              "offset": 283
+            },
+            "end": {
+              "line": 21,
+              "col": 11,
+              "offset": 294
+            }
+          }
+        },
+        {
+          "type": "list",
+          "position": {
+            "start": {
+              "line": 23,
+              "col": 0,
+              "offset": 296
+            },
+            "end": {
+              "line": 29,
+              "col": 49,
+              "offset": 459
+            }
+          }
+        }
+      ],
+      "listItems": [
+        {
+          "parent": -4,
+          "position": {
+            "start": {
+              "line": 4,
+              "col": 0,
+              "offset": 30
+            },
+            "end": {
+              "line": 4,
+              "col": 26,
+              "offset": 56
+            }
+          }
+        },
+        {
+          "parent": -4,
+          "position": {
+            "start": {
+              "line": 5,
+              "col": 0,
+              "offset": 57
+            },
+            "end": {
+              "line": 5,
+              "col": 17,
+              "offset": 74
+            }
+          }
+        },
+        {
+          "parent": -4,
+          "position": {
+            "start": {
+              "line": 6,
+              "col": 0,
+              "offset": 75
+            },
+            "end": {
+              "line": 6,
+              "col": 16,
+              "offset": 91
+            }
+          }
+        },
+        {
+          "parent": -4,
+          "position": {
+            "start": {
+              "line": 7,
+              "col": 0,
+              "offset": 92
+            },
+            "end": {
+              "line": 7,
+              "col": 15,
+              "offset": 107
+            }
+          }
+        },
+        {
+          "parent": -4,
+          "position": {
+            "start": {
+              "line": 8,
+              "col": 0,
+              "offset": 108
+            },
+            "end": {
+              "line": 8,
+              "col": 36,
+              "offset": 144
+            }
+          }
+        },
+        {
+          "parent": -12,
+          "position": {
+            "start": {
+              "line": 12,
+              "col": 0,
+              "offset": 155
+            },
+            "end": {
+              "line": 12,
+              "col": 17,
+              "offset": 172
+            }
+          }
+        },
+        {
+          "parent": -16,
+          "position": {
+            "start": {
+              "line": 16,
+              "col": 0,
+              "offset": 185
+            },
+            "end": {
+              "line": 16,
+              "col": 31,
+              "offset": 216
+            }
+          }
+        },
+        {
+          "parent": -16,
+          "position": {
+            "start": {
+              "line": 17,
+              "col": 0,
+              "offset": 217
+            },
+            "end": {
+              "line": 17,
+              "col": 6,
+              "offset": 223
+            }
+          }
+        },
+        {
+          "parent": 17,
+          "position": {
+            "start": {
+              "line": 18,
+              "col": 2,
+              "offset": 226
+            },
+            "end": {
+              "line": 18,
+              "col": 25,
+              "offset": 249
+            }
+          }
+        },
+        {
+          "parent": 17,
+          "position": {
+            "start": {
+              "line": 19,
+              "col": 2,
+              "offset": 252
+            },
+            "end": {
+              "line": 19,
+              "col": 31,
+              "offset": 281
+            }
+          }
+        },
+        {
+          "parent": -23,
+          "position": {
+            "start": {
+              "line": 23,
+              "col": 0,
+              "offset": 296
+            },
+            "end": {
+              "line": 23,
+              "col": 6,
+              "offset": 302
+            }
+          }
+        },
+        {
+          "parent": 23,
+          "position": {
+            "start": {
+              "line": 24,
+              "col": 2,
+              "offset": 305
+            },
+            "end": {
+              "line": 24,
+              "col": 33,
+              "offset": 336
+            }
+          }
+        },
+        {
+          "parent": 23,
+          "position": {
+            "start": {
+              "line": 25,
+              "col": 2,
+              "offset": 339
+            },
+            "end": {
+              "line": 25,
+              "col": 19,
+              "offset": 356
+            }
+          }
+        },
+        {
+          "parent": 23,
+          "position": {
+            "start": {
+              "line": 26,
+              "col": 2,
+              "offset": 359
+            },
+            "end": {
+              "line": 26,
+              "col": 18,
+              "offset": 375
+            }
+          }
+        },
+        {
+          "parent": 23,
+          "position": {
+            "start": {
+              "line": 27,
+              "col": 2,
+              "offset": 378
+            },
+            "end": {
+              "line": 27,
+              "col": 17,
+              "offset": 393
+            }
+          }
+        },
+        {
+          "parent": 23,
+          "position": {
+            "start": {
+              "line": 28,
+              "col": 2,
+              "offset": 396
+            },
+            "end": {
+              "line": 28,
+              "col": 15,
+              "offset": 409
+            }
+          }
+        },
+        {
+          "parent": 28,
+          "position": {
+            "start": {
+              "line": 29,
+              "col": 4,
+              "offset": 414
+            },
+            "end": {
+              "line": 29,
+              "col": 49,
+              "offset": 459
+            }
+          }
+        }
+      ]
+    },
+    "Page Slug.md": {
+      "sections": [
+        {
+          "type": "yaml",
+          "position": {
+            "start": {
+              "line": 0,
+              "col": 0,
+              "offset": 0
+            },
+            "end": {
+              "line": 2,
+              "col": 3,
+              "offset": 19
+            }
+          }
+        },
+        {
+          "type": "paragraph",
+          "position": {
+            "start": {
+              "line": 4,
+              "col": 0,
+              "offset": 21
+            },
+            "end": {
+              "line": 4,
+              "col": 8,
+              "offset": 29
+            }
+          }
+        }
+      ],
+      "frontmatter": {
+        "slug": "/slug",
+        "position": {
+          "start": {
+            "line": 0,
+            "col": 0,
+            "offset": 0
+          },
+          "end": {
+            "line": 2,
+            "col": 3,
+            "offset": 19
+          }
+        }
+      }
+    },
+    "Page Simple.md": {
+      "sections": [
+        {
+          "type": "paragraph",
+          "position": {
+            "start": {
+              "line": 0,
+              "col": 0,
+              "offset": 0
+            },
+            "end": {
+              "line": 0,
+              "col": 14,
+              "offset": 14
+            }
+          }
+        }
+      ]
+    },
     "Page Links.md": {
       "links": [
         {
+          "link": "Page Simple",
+          "original": "[[Page Simple]]",
+          "displayText": "Page Simple",
           "position": {
             "start": {
               "line": 2,
@@ -138,12 +948,12 @@
               "col": 15,
               "offset": 33
             }
-          },
-          "link": "Page Simple",
-          "original": "[[Page Simple]]",
-          "displayText": "Page Simple"
+          }
         },
         {
+          "link": "Page Links",
+          "original": "[[Page Links]]",
+          "displayText": "Page Links",
           "position": {
             "start": {
               "line": 4,
@@ -152,30 +962,44 @@
             },
             "end": {
               "line": 4,
-              "col": 15,
-              "offset": 50
+              "col": 14,
+              "offset": 49
             }
-          },
-          "link": "Blog Simple",
-          "original": "[[Blog Simple]]",
-          "displayText": "Blog Simple"
+          }
         },
         {
+          "link": "Page Slug",
+          "original": "[[Page Slug]]",
+          "displayText": "Page Slug",
           "position": {
             "start": {
               "line": 6,
               "col": 0,
-              "offset": 52
+              "offset": 51
             },
             "end": {
               "line": 6,
-              "col": 14,
-              "offset": 66
+              "col": 13,
+              "offset": 64
             }
-          },
-          "link": "Page Links",
-          "original": "[[Page Links]]",
-          "displayText": "Page Links"
+          }
+        },
+        {
+          "link": "Blog Simple",
+          "original": "[[Blog Simple]]",
+          "displayText": "Blog Simple",
+          "position": {
+            "start": {
+              "line": 8,
+              "col": 0,
+              "offset": 66
+            },
+            "end": {
+              "line": 8,
+              "col": 15,
+              "offset": 81
+            }
+          }
         }
       ],
       "sections": [
@@ -219,8 +1043,8 @@
             },
             "end": {
               "line": 4,
-              "col": 15,
-              "offset": 50
+              "col": 14,
+              "offset": 49
             }
           }
         },
@@ -230,654 +1054,27 @@
             "start": {
               "line": 6,
               "col": 0,
-              "offset": 52
+              "offset": 51
             },
             "end": {
               "line": 6,
-              "col": 14,
+              "col": 13,
+              "offset": 64
+            }
+          }
+        },
+        {
+          "type": "paragraph",
+          "position": {
+            "start": {
+              "line": 8,
+              "col": 0,
               "offset": 66
-            }
-          }
-        }
-      ]
-    },
-    "Structure.md": {
-      "links": [
-        {
-          "position": {
-            "start": {
-              "line": 4,
-              "col": 2,
-              "offset": 32
             },
             "end": {
-              "line": 4,
-              "col": 23,
-              "offset": 53
-            }
-          },
-          "link": "Docs Landing Page",
-          "original": "[[Docs Landing Page]]",
-          "displayText": "Docs Landing Page"
-        },
-        {
-          "position": {
-            "start": {
-              "line": 5,
-              "col": 2,
-              "offset": 59
-            },
-            "end": {
-              "line": 5,
-              "col": 17,
-              "offset": 74
-            }
-          },
-          "link": "Page Simple",
-          "original": "[[Page Simple]]",
-          "displayText": "Page Simple"
-        },
-        {
-          "position": {
-            "start": {
-              "line": 6,
-              "col": 2,
-              "offset": 77
-            },
-            "end": {
-              "line": 6,
-              "col": 16,
-              "offset": 91
-            }
-          },
-          "link": "Page Links",
-          "original": "[[Page Links]]",
-          "displayText": "Page Links"
-        },
-        {
-          "position": {
-            "start": {
-              "line": 7,
-              "col": 2,
-              "offset": 94
-            },
-            "end": {
-              "line": 7,
-              "col": 36,
-              "offset": 128
-            }
-          },
-          "link": "Obsidian to Docusaurus Mapping",
-          "original": "[[Obsidian to Docusaurus Mapping]]",
-          "displayText": "Obsidian to Docusaurus Mapping"
-        },
-        {
-          "position": {
-            "start": {
-              "line": 11,
-              "col": 2,
-              "offset": 141
-            },
-            "end": {
-              "line": 11,
-              "col": 17,
-              "offset": 156
-            }
-          },
-          "link": "Blog Simple",
-          "original": "[[Blog Simple]]",
-          "displayText": "Blog Simple"
-        },
-        {
-          "position": {
-            "start": {
-              "line": 15,
-              "col": 2,
-              "offset": 171
-            },
-            "end": {
-              "line": 15,
-              "col": 31,
-              "offset": 200
-            }
-          },
-          "link": "Docs Landing Page",
-          "original": "[[Docs Landing Page|My Docs]]",
-          "displayText": "My Docs"
-        },
-        {
-          "position": {
-            "start": {
-              "line": 17,
-              "col": 4,
-              "offset": 212
-            },
-            "end": {
-              "line": 17,
-              "col": 25,
-              "offset": 233
-            }
-          },
-          "link": "Docs Landing Page",
-          "original": "[[Docs Landing Page]]",
-          "displayText": "Docs Landing Page"
-        },
-        {
-          "position": {
-            "start": {
-              "line": 18,
-              "col": 4,
-              "offset": 238
-            },
-            "end": {
-              "line": 18,
-              "col": 31,
-              "offset": 265
-            }
-          },
-          "link": "Docs Landing Page",
-          "original": "[[Docs Landing Page|Label]]",
-          "displayText": "Label"
-        },
-        {
-          "position": {
-            "start": {
-              "line": 23,
-              "col": 4,
-              "offset": 291
-            },
-            "end": {
-              "line": 23,
-              "col": 33,
-              "offset": 320
-            }
-          },
-          "link": "Docs Landing Page",
-          "original": "[[Docs Landing Page|Welcome]]",
-          "displayText": "Welcome"
-        },
-        {
-          "position": {
-            "start": {
-              "line": 24,
-              "col": 4,
-              "offset": 325
-            },
-            "end": {
-              "line": 24,
-              "col": 19,
-              "offset": 340
-            }
-          },
-          "link": "Page Simple",
-          "original": "[[Page Simple]]",
-          "displayText": "Page Simple"
-        },
-        {
-          "position": {
-            "start": {
-              "line": 26,
-              "col": 6,
-              "offset": 363
-            },
-            "end": {
-              "line": 26,
-              "col": 49,
-              "offset": 406
-            }
-          },
-          "link": "Obsidian to Docusaurus Mapping",
-          "original": "[[Obsidian to Docusaurus Mapping|Mappings]]",
-          "displayText": "Mappings"
-        }
-      ],
-      "tags": [
-        {
-          "position": {
-            "start": {
-              "line": 0,
-              "col": 0,
-              "offset": 0
-            },
-            "end": {
-              "line": 0,
-              "col": 18,
-              "offset": 18
-            }
-          },
-          "tag": "#docusaurus/test/_"
-        }
-      ],
-      "headings": [
-        {
-          "position": {
-            "start": {
-              "line": 2,
-              "col": 0,
-              "offset": 20
-            },
-            "end": {
-              "line": 2,
-              "col": 8,
-              "offset": 28
-            }
-          },
-          "heading": "Pages",
-          "level": 2
-        },
-        {
-          "position": {
-            "start": {
-              "line": 9,
-              "col": 0,
-              "offset": 130
-            },
-            "end": {
-              "line": 9,
-              "col": 7,
-              "offset": 137
-            }
-          },
-          "heading": "Blog",
-          "level": 2
-        },
-        {
-          "position": {
-            "start": {
-              "line": 13,
-              "col": 0,
-              "offset": 158
-            },
-            "end": {
-              "line": 13,
-              "col": 9,
-              "offset": 167
-            }
-          },
-          "heading": "Navbar",
-          "level": 2
-        },
-        {
-          "position": {
-            "start": {
-              "line": 20,
-              "col": 0,
-              "offset": 267
-            },
-            "end": {
-              "line": 20,
-              "col": 11,
-              "offset": 278
-            }
-          },
-          "heading": "Sidebars",
-          "level": 2
-        }
-      ],
-      "sections": [
-        {
-          "type": "paragraph",
-          "position": {
-            "start": {
-              "line": 0,
-              "col": 0,
-              "offset": 0
-            },
-            "end": {
-              "line": 0,
-              "col": 18,
-              "offset": 18
-            }
-          }
-        },
-        {
-          "type": "heading",
-          "position": {
-            "start": {
-              "line": 2,
-              "col": 0,
-              "offset": 20
-            },
-            "end": {
-              "line": 2,
-              "col": 8,
-              "offset": 28
-            }
-          }
-        },
-        {
-          "type": "list",
-          "position": {
-            "start": {
-              "line": 4,
-              "col": 0,
-              "offset": 30
-            },
-            "end": {
-              "line": 7,
-              "col": 36,
-              "offset": 128
-            }
-          }
-        },
-        {
-          "type": "heading",
-          "position": {
-            "start": {
-              "line": 9,
-              "col": 0,
-              "offset": 130
-            },
-            "end": {
-              "line": 9,
-              "col": 7,
-              "offset": 137
-            }
-          }
-        },
-        {
-          "type": "list",
-          "position": {
-            "start": {
-              "line": 11,
-              "col": 0,
-              "offset": 139
-            },
-            "end": {
-              "line": 11,
-              "col": 17,
-              "offset": 156
-            }
-          }
-        },
-        {
-          "type": "heading",
-          "position": {
-            "start": {
-              "line": 13,
-              "col": 0,
-              "offset": 158
-            },
-            "end": {
-              "line": 13,
-              "col": 9,
-              "offset": 167
-            }
-          }
-        },
-        {
-          "type": "list",
-          "position": {
-            "start": {
-              "line": 15,
-              "col": 0,
-              "offset": 169
-            },
-            "end": {
-              "line": 18,
-              "col": 31,
-              "offset": 265
-            }
-          }
-        },
-        {
-          "type": "heading",
-          "position": {
-            "start": {
-              "line": 20,
-              "col": 0,
-              "offset": 267
-            },
-            "end": {
-              "line": 20,
-              "col": 11,
-              "offset": 278
-            }
-          }
-        },
-        {
-          "type": "list",
-          "position": {
-            "start": {
-              "line": 22,
-              "col": 0,
-              "offset": 280
-            },
-            "end": {
-              "line": 26,
-              "col": 49,
-              "offset": 406
-            }
-          }
-        }
-      ],
-      "listItems": [
-        {
-          "position": {
-            "start": {
-              "line": 4,
-              "col": 0,
-              "offset": 30
-            },
-            "end": {
-              "line": 4,
-              "col": 26,
-              "offset": 56
-            }
-          },
-          "parent": -4
-        },
-        {
-          "position": {
-            "start": {
-              "line": 5,
-              "col": 0,
-              "offset": 57
-            },
-            "end": {
-              "line": 5,
-              "col": 17,
-              "offset": 74
-            }
-          },
-          "parent": -4
-        },
-        {
-          "position": {
-            "start": {
-              "line": 6,
-              "col": 0,
-              "offset": 75
-            },
-            "end": {
-              "line": 6,
-              "col": 16,
-              "offset": 91
-            }
-          },
-          "parent": -4
-        },
-        {
-          "position": {
-            "start": {
-              "line": 7,
-              "col": 0,
-              "offset": 92
-            },
-            "end": {
-              "line": 7,
-              "col": 36,
-              "offset": 128
-            }
-          },
-          "parent": -4
-        },
-        {
-          "position": {
-            "start": {
-              "line": 11,
-              "col": 0,
-              "offset": 139
-            },
-            "end": {
-              "line": 11,
-              "col": 17,
-              "offset": 156
-            }
-          },
-          "parent": -11
-        },
-        {
-          "position": {
-            "start": {
-              "line": 15,
-              "col": 0,
-              "offset": 169
-            },
-            "end": {
-              "line": 15,
-              "col": 31,
-              "offset": 200
-            }
-          },
-          "parent": -15
-        },
-        {
-          "position": {
-            "start": {
-              "line": 16,
-              "col": 0,
-              "offset": 201
-            },
-            "end": {
-              "line": 16,
-              "col": 6,
-              "offset": 207
-            }
-          },
-          "parent": -15
-        },
-        {
-          "position": {
-            "start": {
-              "line": 17,
-              "col": 2,
-              "offset": 210
-            },
-            "end": {
-              "line": 17,
-              "col": 25,
-              "offset": 233
-            }
-          },
-          "parent": 16
-        },
-        {
-          "position": {
-            "start": {
-              "line": 18,
-              "col": 2,
-              "offset": 236
-            },
-            "end": {
-              "line": 18,
-              "col": 31,
-              "offset": 265
-            }
-          },
-          "parent": 16
-        },
-        {
-          "position": {
-            "start": {
-              "line": 22,
-              "col": 0,
-              "offset": 280
-            },
-            "end": {
-              "line": 22,
-              "col": 6,
-              "offset": 286
-            }
-          },
-          "parent": -22
-        },
-        {
-          "position": {
-            "start": {
-              "line": 23,
-              "col": 2,
-              "offset": 289
-            },
-            "end": {
-              "line": 23,
-              "col": 33,
-              "offset": 320
-            }
-          },
-          "parent": 22
-        },
-        {
-          "position": {
-            "start": {
-              "line": 24,
-              "col": 2,
-              "offset": 323
-            },
-            "end": {
-              "line": 24,
-              "col": 19,
-              "offset": 340
-            }
-          },
-          "parent": 22
-        },
-        {
-          "position": {
-            "start": {
-              "line": 25,
-              "col": 2,
-              "offset": 343
-            },
-            "end": {
-              "line": 25,
+              "line": 8,
               "col": 15,
-              "offset": 356
-            }
-          },
-          "parent": 22
-        },
-        {
-          "position": {
-            "start": {
-              "line": 26,
-              "col": 4,
-              "offset": 361
-            },
-            "end": {
-              "line": 26,
-              "col": 49,
-              "offset": 406
-            }
-          },
-          "parent": 25
-        }
-      ]
-    },
-    "Page Simple.md": {
-      "sections": [
-        {
-          "type": "paragraph",
-          "position": {
-            "start": {
-              "line": 0,
-              "col": 0,
-              "offset": 0
-            },
-            "end": {
-              "line": 0,
-              "col": 14,
-              "offset": 14
+              "offset": 81
             }
           }
         }

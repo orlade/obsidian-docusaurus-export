@@ -5,6 +5,7 @@
 - [[Docs Landing Page]] @/
 - [[Page Simple]]
 - [[Page Links]]
+- [[Page Slug]]
 - [[Obsidian to Docusaurus Mapping]]
 
 ## Blog
@@ -24,5 +25,6 @@
   - [[Docs Landing Page|Welcome]]
   - [[Page Simple]]
   - [[Page Links]]
+  - [[Page Slug]]
   - This Plugin
     - [[Obsidian to Docusaurus Mapping|Mappings]]

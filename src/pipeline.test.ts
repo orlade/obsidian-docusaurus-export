@@ -47,6 +47,7 @@ describe("structure", () => {
           { label: "Docs Landing Page", sourcePath: "Docs Landing Page.md", slug: "/" },
           { label: "Page Simple", sourcePath: "Page Simple.md" },
           { label: "Page Links", sourcePath: "Page Links.md" },
+          { label: "Page Slug", sourcePath: "Page Slug.md" },
           {
             label: "Obsidian to Docusaurus Mapping",
             sourcePath: "Obsidian to Docusaurus Mapping.md",
@@ -68,6 +69,8 @@ describe("structure", () => {
             children: [
               { label: "Welcome", sourcePath: "Docs Landing Page.md" },
               { label: "Page Simple", sourcePath: "Page Simple.md" },
+              { label: "Page Links", sourcePath: "Page Links.md" },
+              { label: "Page Slug", sourcePath: "Page Slug.md" },
               {
                 label: "This Plugin",
                 children: [
@@ -102,7 +105,7 @@ describe("structure", () => {
     await sb.enrichContent(doc);
     const site: Site = {
       blog: { posts: { "Blog Simple.md": { sourcePath: "Blog Simple.md" } } },
-      pages: { docs: { "Page Simple.md": {}, "Page Links.md": {} } },
+      pages: { docs: { "Page Simple.md": {}, "Page Links.md": {}, "Page Slug.md": {} } },
     } as any as Site;
 
     await sb.replaceLinks(doc, site);
@@ -113,9 +116,12 @@ describe("structure", () => {
 
 [Page Simple](/docs/Page%20Simple)
 
-[Blog Simple](/blog/Blog%20Simple)
+[Page Links](/docs/Page%20Links)
 
-[Page Links](/docs/Page%20Links)`,
+[Page Slug](/docs/slug)
+
+[Blog Simple](/blog/Blog%20Simple)
+`,
     });
   });
 
@@ -160,6 +166,10 @@ describe("structure", () => {
               label: "Page Links",
               sourcePath: "Page Links.md",
             },
+            "Page Slug.md": {
+              label: "Page Slug",
+              sourcePath: "Page Slug.md",
+            },
             "Obsidian to Docusaurus Mapping.md": {
               label: "Obsidian to Docusaurus Mapping",
               sourcePath: "Obsidian to Docusaurus Mapping.md",
@@ -202,6 +212,8 @@ describe("structure", () => {
                   category: "docs",
                 },
                 { label: "Page Simple", sourcePath: "Page Simple.md", category: "docs" },
+                { label: "Page Links", sourcePath: "Page Links.md", category: "docs" },
+                { label: "Page Slug", sourcePath: "Page Slug.md", slug: "/slug", category: "docs" },
                 {
                   label: "This Plugin",
                   children: [

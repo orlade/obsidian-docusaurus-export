@@ -2,6 +2,8 @@ Page with links.
 
 [[Page Simple]]
 
-[[Blog Simple]]
-
 [[Page Links]]
+
+[[Page Slug]]
+
+[[Blog Simple]]

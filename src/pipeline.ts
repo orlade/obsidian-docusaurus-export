@@ -1,10 +1,11 @@
-import { each, isEmpty, flatten, map, keyBy, some } from "lodash";
+import { clone, each, isEmpty, flatten, map, keyBy, some } from "lodash";
 import { basename, join } from "path";
-import { Link, LinkNode, ref, Site, SiteFile, Source, TreeNode } from "./model";
+import { Document, Link, LinkNode, ref, Site, SiteFile, Source, TreeLeaf, TreeNode } from "./model";
 import { ContentStore } from "./store";
 import { categorize, extractLinks, extractLinkTree, findStructureFiles } from "./structure";
 import {
   babelConfig,
+  clean,
   customCss,
   defaultHome,
   docusaurusConfig,
@@ -67,6 +68,35 @@ export class SiteBuilder {
     this.store = store;
   }
 
+  /** Adds content to a doc. */
+  async enrichContent(doc: Document): Promise<void> {
+    doc.content = (await this.store.loadFile(ref(doc.sourcePath))).body;
+  }
+
+  /** Replaces wikilinks with Markdown links. */
+  async replaceLinks(doc: Document, site: Site): Promise<void> {
+    const meta = await this.store.getMetadata(ref(doc.sourcePath));
+    meta.links &&
+      clone(meta.links)
+        .reverse()
+        .forEach((l) => {
+          const before = doc.content.substring(0, l.position.start.offset);
+          const after = doc.content.substr(l.position.end.offset);
+
+          // TODO: Check if target pages are in export set.
+          const tmp: TreeLeaf = { sourcePath: l.link + ".md", label: "" };
+          categorize([tmp], site);
+          let prefix: string;
+          if (tmp.category) {
+            const prefix = tmp.category === "blog" ? "/blog/" : "/docs/";
+            const href = prefix + clean(l.link).replace(/ /g, "%20");
+            doc.content = `${before}[${l.displayText || l.link}](${href})${after}`;
+          } else {
+            doc.content = `${before}${l.displayText || l.link}${after}`;
+          }
+        });
+  }
+
   async build({ title = "", path, repo, url }): Promise<Site> {
     const site: Site = {
       title,
@@ -113,14 +143,13 @@ export class SiteBuilder {
       site.navbar.items.push(...navbar);
     }
 
-    async function enrichContent(site: Site) {
-      return Promise.all(
-        map([site.blog.posts, site.pages.docs], async (index) =>
-          Promise.all(
-            map(index, async (p) => (p.content = (await store.loadFile(ref(p.sourcePath))).body))
-          )
-        )
-      );
+    // Given a function that operate on a document, returns a function that applies it to all pages
+    // and blog posts in a site. If the function is async, all invocations will be resolved.
+    function transformNotes(f: (note: Document, site: Site) => any): (site: Site) => any {
+      return (site) =>
+        Promise.all(
+          flatten(map([site.blog.posts, site.pages.docs], (i) => map(i, (doc) => f(doc, site))))
+        );
     }
 
     const files = await findStructureFiles(store);
@@ -129,7 +158,8 @@ export class SiteBuilder {
     }
 
     await buildIndex(site, files[0]);
-    await enrichContent(site);
+    await transformNotes(this.enrichContent.bind(this))(site);
+    await transformNotes(this.replaceLinks.bind(this))(site);
     return site;
   }
 
@@ -138,6 +168,8 @@ export class SiteBuilder {
     const dir = site.path;
     const logoRelDestPath = join("static", "img", "logo.png");
     const logoDestPath = join(dir, logoRelDestPath);
+
+    await this.store.mkdir(dir);
 
     const files: { [key: string]: string } = {
       ".gitignore": gitignore(),

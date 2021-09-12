@@ -326,7 +326,7 @@ html[data-theme="dark"] {
 `;
 }
 
-function clean(name: string): string {
+export function clean(name: string): string {
   return name.replace(/\?/g, "_").replace(/\.\w+/, "");
 }
 

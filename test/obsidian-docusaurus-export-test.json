@@ -1,14 +1,14 @@
 {
   "vault.getMarkdownFiles()": [
     {
-      "path": "Obsidian to Docusaurus Mapping.md",
-      "name": "Obsidian to Docusaurus Mapping.md",
+      "path": "Page Links.md",
+      "name": "Page Links.md",
       "stat": {
-        "ctime": 1627625427772,
-        "mtime": 1627861508262,
-        "size": 1727
+        "ctime": 1631443883414,
+        "mtime": 1631444080246,
+        "size": 66
       },
-      "basename": "Obsidian to Docusaurus Mapping",
+      "basename": "Page Links",
       "extension": "md",
       "parent": {
         "path": "/",
@@ -21,8 +21,8 @@
       "name": "Structure.md",
       "stat": {
         "ctime": 1625878934222,
-        "mtime": 1630213168075,
-        "size": 390
+        "mtime": 1631443883428,
+        "size": 407
       },
       "basename": "Structure",
       "extension": "md",
@@ -37,10 +37,26 @@
       "name": "Page Simple.md",
       "stat": {
         "ctime": 1625879153954,
-        "mtime": 1625879184676,
+        "mtime": 1631278089576,
         "size": 14
       },
       "basename": "Page Simple",
+      "extension": "md",
+      "parent": {
+        "path": "/",
+        "name": "",
+        "parent": null
+      }
+    },
+    {
+      "path": "Obsidian to Docusaurus Mapping.md",
+      "name": "Obsidian to Docusaurus Mapping.md",
+      "stat": {
+        "ctime": 1627625427772,
+        "mtime": 1630567744203,
+        "size": 1745
+      },
+      "basename": "Obsidian to Docusaurus Mapping",
       "extension": "md",
       "parent": {
         "path": "/",
@@ -82,25 +98,791 @@
     }
   ],
   "vault.read(*)": {
-    "Obsidian to Docusaurus Mapping.md": "Most of the logic of obsidian-docusaurus-export is mapping Obsidian concepts to Docusaurus concepts (or the same concepts in the appropriate format). This document describes the mapping.\n\n## Obsidian Concepts\n- **File**: a file on disk.\n- **Note**: a Markdown file.\n- **Folder**: a folder on disk.\n- **Vault**: all of the content under a root directory.\n- **Link**: Reference from a note to another file (usually another note).\n\n## Docusaurus Concepts\n- **Page**: A page of the website. Markdown file nested under the `pages` subdirectory.\n- **(Blog) Post**: basically a page, but part of the blog. Markdown file nested under the `blog` subdirectory.\n- **Navbar**: Describes the contents and structure of the navbar (menu on top of the website).\n- **Sidebars**: Describes the contents and structure of the sidebar (menu(s) on the left of the website, not the blog).\n- **Config**: describes the website and orchestrates the other components. `docusaurus.config.js`.\n\n## Plugin Concepts\n- **Site**: a website containing a subset of the content in a vault.\n- **Structure note**: a note describing the contents and structure of a side. The main input to the Docusaurus export logic.\n\n## Mapping\n### File to Page\n- name -> name\n\n### Vault to Site\n- Input: Structure doc\n\t- Notes in **Pages** section:\n\nPosts/Pages:\n- If no slug is present, generate and prepend one to remove capitals, spaces, special chars, etc. from name\n- TODO: One doc should be chosen as the `docs/` landing page.\n\nNavbar:\n- If there's any blog posts, add a Blog entry\n- Prepend `docs/` to each link unless the link only maps to a blog post\n- Some items will wants to link to roots, like `/docs` or `/blog`.\n\t- TODO some carveout for internal `href` type links.",
-    "Structure.md": "#docusaurus/test/_\n\n## Pages\n\n- [[Docs Landing Page]] @/\n- [[Page Simple]]\n- [[Obsidian to Docusaurus Mapping]]\n\n## Blog\n\n- [[Blog Simple]]\n\n## Navbar\n\n- [[Docs Landing Page|My Docs]]\n- Menu\n  - [[Docs Landing Page]]\n  - [[Docs Landing Page|Label]]\n\n## Sidebars\n\n- docs\n  - [[Docs Landing Page|Welcome]]\n  - [[Page Simple]]\n  - This Plugin\n    - [[Obsidian to Docusaurus Mapping|Mappings]]\n",
+    "Page Links.md": "Page with links.\n\n[[Page Simple]]\n\n[[Blog Simple]]\n\n[[Page Links]]",
+    "Structure.md": "#docusaurus/test/_\n\n## Pages\n\n- [[Docs Landing Page]] @/\n- [[Page Simple]]\n- [[Page Links]]\n- [[Obsidian to Docusaurus Mapping]]\n\n## Blog\n\n- [[Blog Simple]]\n\n## Navbar\n\n- [[Docs Landing Page|My Docs]]\n- Menu\n  - [[Docs Landing Page]]\n  - [[Docs Landing Page|Label]]\n\n## Sidebars\n\n- docs\n  - [[Docs Landing Page|Welcome]]\n  - [[Page Simple]]\n  - This Plugin\n    - [[Obsidian to Docusaurus Mapping|Mappings]]\n",
     "Page Simple.md": "Simplest page.",
+    "Obsidian to Docusaurus Mapping.md": "Most of the logic of obsidian-docusaurus-export is mapping Obsidian concepts to Docusaurus concepts (or the same concepts in the appropriate format). This document describes the mapping.\n\n## Obsidian Concepts\n- **File**: a file on disk.\n- **Note**: a Markdown file.\n- **Folder**: a folder on disk.\n- **Vault**: all of the content under a root directory.\n- **Link**: Reference from a note to another file (usually another note).\n\n## Docusaurus Concepts\n- **Page**: A page of the website. Markdown file nested under the `pages` subdirectory.\n- **(Blog) Post**: basically a page, but part of the blog. Markdown file nested under the `blog` subdirectory.\n- **Navbar**: Describes the contents and structure of the navbar (menu on top of the website).\n- **Sidebars**: Describes the contents and structure of the sidebar (menu(s) on the left of the website, not the blog).\n- **Config**: describes the website and orchestrates the other components. `docusaurus.config.js`.\n\n## Plugin Concepts\n- **Site**: a website containing a subset of the content in a vault.\n- **Structure note**: a note describing the contents and structure of a side. The main input to the Docusaurus export logic.\n\n## Mapping\n### File to Page\n- name -> name\n\n### Vault to Site\n- Input: Structure doc\n\t- Notes in **Pages** section:\n\nPosts/Pages:\n- If no slug is present, generate and prepend one to remove capitals, spaces, special chars, etc. from name\n- TODO: One doc should be chosen as the `docs/` landing page.\n\nNavbar:\n- If there's any blog posts, add a Blog entry\n- Prepend `docs/` to each link unless the link only maps to a blog post\n- Some items will wants to link to roots, like `/docs` or `/blog`.\n\t- TODO some carveout for internal `href` type links.\n\n\n```mermaid\n\n```",
     "Docs Landing Page.md": "---\nslug: /\n---\n\nThis is the landing page for the Docs navbar link.",
     "Blog Simple.md": "Simplest blog post."
   },
   "metadataCache.getFirstLinkpathDest(*)": {
-    "Obsidian to Docusaurus Mapping.md": {},
+    "Page Links.md": {
+      "Page Simple": "Page Simple.md",
+      "Blog Simple": "Blog Simple.md",
+      "Page Links": "Page Links.md"
+    },
     "Structure.md": {
       "Docs Landing Page": "Docs Landing Page.md",
       "Page Simple": "Page Simple.md",
+      "Page Links": "Page Links.md",
       "Obsidian to Docusaurus Mapping": "Obsidian to Docusaurus Mapping.md",
       "Blog Simple": "Blog Simple.md"
     },
     "Page Simple.md": {},
+    "Obsidian to Docusaurus Mapping.md": {},
     "Docs Landing Page.md": {},
     "Blog Simple.md": {}
   },
   "metadataCache.getCache(*)": {
+    "Page Links.md": {
+      "links": [
+        {
+          "position": {
+            "start": {
+              "line": 2,
+              "col": 0,
+              "offset": 18
+            },
+            "end": {
+              "line": 2,
+              "col": 15,
+              "offset": 33
+            }
+          },
+          "link": "Page Simple",
+          "original": "[[Page Simple]]",
+          "displayText": "Page Simple"
+        },
+        {
+          "position": {
+            "start": {
+              "line": 4,
+              "col": 0,
+              "offset": 35
+            },
+            "end": {
+              "line": 4,
+              "col": 15,
+              "offset": 50
+            }
+          },
+          "link": "Blog Simple",
+          "original": "[[Blog Simple]]",
+          "displayText": "Blog Simple"
+        },
+        {
+          "position": {
+            "start": {
+              "line": 6,
+              "col": 0,
+              "offset": 52
+            },
+            "end": {
+              "line": 6,
+              "col": 14,
+              "offset": 66
+            }
+          },
+          "link": "Page Links",
+          "original": "[[Page Links]]",
+          "displayText": "Page Links"
+        }
+      ],
+      "sections": [
+        {
+          "type": "paragraph",
+          "position": {
+            "start": {
+              "line": 0,
+              "col": 0,
+              "offset": 0
+            },
+            "end": {
+              "line": 0,
+              "col": 16,
+              "offset": 16
+            }
+          }
+        },
+        {
+          "type": "paragraph",
+          "position": {
+            "start": {
+              "line": 2,
+              "col": 0,
+              "offset": 18
+            },
+            "end": {
+              "line": 2,
+              "col": 15,
+              "offset": 33
+            }
+          }
+        },
+        {
+          "type": "paragraph",
+          "position": {
+            "start": {
+              "line": 4,
+              "col": 0,
+              "offset": 35
+            },
+            "end": {
+              "line": 4,
+              "col": 15,
+              "offset": 50
+            }
+          }
+        },
+        {
+          "type": "paragraph",
+          "position": {
+            "start": {
+              "line": 6,
+              "col": 0,
+              "offset": 52
+            },
+            "end": {
+              "line": 6,
+              "col": 14,
+              "offset": 66
+            }
+          }
+        }
+      ]
+    },
+    "Structure.md": {
+      "links": [
+        {
+          "position": {
+            "start": {
+              "line": 4,
+              "col": 2,
+              "offset": 32
+            },
+            "end": {
+              "line": 4,
+              "col": 23,
+              "offset": 53
+            }
+          },
+          "link": "Docs Landing Page",
+          "original": "[[Docs Landing Page]]",
+          "displayText": "Docs Landing Page"
+        },
+        {
+          "position": {
+            "start": {
+              "line": 5,
+              "col": 2,
+              "offset": 59
+            },
+            "end": {
+              "line": 5,
+              "col": 17,
+              "offset": 74
+            }
+          },
+          "link": "Page Simple",
+          "original": "[[Page Simple]]",
+          "displayText": "Page Simple"
+        },
+        {
+          "position": {
+            "start": {
+              "line": 6,
+              "col": 2,
+              "offset": 77
+            },
+            "end": {
+              "line": 6,
+              "col": 16,
+              "offset": 91
+            }
+          },
+          "link": "Page Links",
+          "original": "[[Page Links]]",
+          "displayText": "Page Links"
+        },
+        {
+          "position": {
+            "start": {
+              "line": 7,
+              "col": 2,
+              "offset": 94
+            },
+            "end": {
+              "line": 7,
+              "col": 36,
+              "offset": 128
+            }
+          },
+          "link": "Obsidian to Docusaurus Mapping",
+          "original": "[[Obsidian to Docusaurus Mapping]]",
+          "displayText": "Obsidian to Docusaurus Mapping"
+        },
+        {
+          "position": {
+            "start": {
+              "line": 11,
+              "col": 2,
+              "offset": 141
+            },
+            "end": {
+              "line": 11,
+              "col": 17,
+              "offset": 156
+            }
+          },
+          "link": "Blog Simple",
+          "original": "[[Blog Simple]]",
+          "displayText": "Blog Simple"
+        },
+        {
+          "position": {
+            "start": {
+              "line": 15,
+              "col": 2,
+              "offset": 171
+            },
+            "end": {
+              "line": 15,
+              "col": 31,
+              "offset": 200
+            }
+          },
+          "link": "Docs Landing Page",
+          "original": "[[Docs Landing Page|My Docs]]",
+          "displayText": "My Docs"
+        },
+        {
+          "position": {
+            "start": {
+              "line": 17,
+              "col": 4,
+              "offset": 212
+            },
+            "end": {
+              "line": 17,
+              "col": 25,
+              "offset": 233
+            }
+          },
+          "link": "Docs Landing Page",
+          "original": "[[Docs Landing Page]]",
+          "displayText": "Docs Landing Page"
+        },
+        {
+          "position": {
+            "start": {
+              "line": 18,
+              "col": 4,
+              "offset": 238
+            },
+            "end": {
+              "line": 18,
+              "col": 31,
+              "offset": 265
+            }
+          },
+          "link": "Docs Landing Page",
+          "original": "[[Docs Landing Page|Label]]",
+          "displayText": "Label"
+        },
+        {
+          "position": {
+            "start": {
+              "line": 23,
+              "col": 4,
+              "offset": 291
+            },
+            "end": {
+              "line": 23,
+              "col": 33,
+              "offset": 320
+            }
+          },
+          "link": "Docs Landing Page",
+          "original": "[[Docs Landing Page|Welcome]]",
+          "displayText": "Welcome"
+        },
+        {
+          "position": {
+            "start": {
+              "line": 24,
+              "col": 4,
+              "offset": 325
+            },
+            "end": {
+              "line": 24,
+              "col": 19,
+              "offset": 340
+            }
+          },
+          "link": "Page Simple",
+          "original": "[[Page Simple]]",
+          "displayText": "Page Simple"
+        },
+        {
+          "position": {
+            "start": {
+              "line": 26,
+              "col": 6,
+              "offset": 363
+            },
+            "end": {
+              "line": 26,
+              "col": 49,
+              "offset": 406
+            }
+          },
+          "link": "Obsidian to Docusaurus Mapping",
+          "original": "[[Obsidian to Docusaurus Mapping|Mappings]]",
+          "displayText": "Mappings"
+        }
+      ],
+      "tags": [
+        {
+          "position": {
+            "start": {
+              "line": 0,
+              "col": 0,
+              "offset": 0
+            },
+            "end": {
+              "line": 0,
+              "col": 18,
+              "offset": 18
+            }
+          },
+          "tag": "#docusaurus/test/_"
+        }
+      ],
+      "headings": [
+        {
+          "position": {
+            "start": {
+              "line": 2,
+              "col": 0,
+              "offset": 20
+            },
+            "end": {
+              "line": 2,
+              "col": 8,
+              "offset": 28
+            }
+          },
+          "heading": "Pages",
+          "level": 2
+        },
+        {
+          "position": {
+            "start": {
+              "line": 9,
+              "col": 0,
+              "offset": 130
+            },
+            "end": {
+              "line": 9,
+              "col": 7,
+              "offset": 137
+            }
+          },
+          "heading": "Blog",
+          "level": 2
+        },
+        {
+          "position": {
+            "start": {
+              "line": 13,
+              "col": 0,
+              "offset": 158
+            },
+            "end": {
+              "line": 13,
+              "col": 9,
+              "offset": 167
+            }
+          },
+          "heading": "Navbar",
+          "level": 2
+        },
+        {
+          "position": {
+            "start": {
+              "line": 20,
+              "col": 0,
+              "offset": 267
+            },
+            "end": {
+              "line": 20,
+              "col": 11,
+              "offset": 278
+            }
+          },
+          "heading": "Sidebars",
+          "level": 2
+        }
+      ],
+      "sections": [
+        {
+          "type": "paragraph",
+          "position": {
+            "start": {
+              "line": 0,
+              "col": 0,
+              "offset": 0
+            },
+            "end": {
+              "line": 0,
+              "col": 18,
+              "offset": 18
+            }
+          }
+        },
+        {
+          "type": "heading",
+          "position": {
+            "start": {
+              "line": 2,
+              "col": 0,
+              "offset": 20
+            },
+            "end": {
+              "line": 2,
+              "col": 8,
+              "offset": 28
+            }
+          }
+        },
+        {
+          "type": "list",
+          "position": {
+            "start": {
+              "line": 4,
+              "col": 0,
+              "offset": 30
+            },
+            "end": {
+              "line": 7,
+              "col": 36,
+              "offset": 128
+            }
+          }
+        },
+        {
+          "type": "heading",
+          "position": {
+            "start": {
+              "line": 9,
+              "col": 0,
+              "offset": 130
+            },
+            "end": {
+              "line": 9,
+              "col": 7,
+              "offset": 137
+            }
+          }
+        },
+        {
+          "type": "list",
+          "position": {
+            "start": {
+              "line": 11,
+              "col": 0,
+              "offset": 139
+            },
+            "end": {
+              "line": 11,
+              "col": 17,
+              "offset": 156
+            }
+          }
+        },
+        {
+          "type": "heading",
+          "position": {
+            "start": {
+              "line": 13,
+              "col": 0,
+              "offset": 158
+            },
+            "end": {
+              "line": 13,
+              "col": 9,
+              "offset": 167
+            }
+          }
+        },
+        {
+          "type": "list",
+          "position": {
+            "start": {
+              "line": 15,
+              "col": 0,
+              "offset": 169
+            },
+            "end": {
+              "line": 18,
+              "col": 31,
+              "offset": 265
+            }
+          }
+        },
+        {
+          "type": "heading",
+          "position": {
+            "start": {
+              "line": 20,
+              "col": 0,
+              "offset": 267
+            },
+            "end": {
+              "line": 20,
+              "col": 11,
+              "offset": 278
+            }
+          }
+        },
+        {
+          "type": "list",
+          "position": {
+            "start": {
+              "line": 22,
+              "col": 0,
+              "offset": 280
+            },
+            "end": {
+              "line": 26,
+              "col": 49,
+              "offset": 406
+            }
+          }
+        }
+      ],
+      "listItems": [
+        {
+          "position": {
+            "start": {
+              "line": 4,
+              "col": 0,
+              "offset": 30
+            },
+            "end": {
+              "line": 4,
+              "col": 26,
+              "offset": 56
+            }
+          },
+          "parent": -4
+        },
+        {
+          "position": {
+            "start": {
+              "line": 5,
+              "col": 0,
+              "offset": 57
+            },
+            "end": {
+              "line": 5,
+              "col": 17,
+              "offset": 74
+            }
+          },
+          "parent": -4
+        },
+        {
+          "position": {
+            "start": {
+              "line": 6,
+              "col": 0,
+              "offset": 75
+            },
+            "end": {
+              "line": 6,
+              "col": 16,
+              "offset": 91
+            }
+          },
+          "parent": -4
+        },
+        {
+          "position": {
+            "start": {
+              "line": 7,
+              "col": 0,
+              "offset": 92
+            },
+            "end": {
+              "line": 7,
+              "col": 36,
+              "offset": 128
+            }
+          },
+          "parent": -4
+        },
+        {
+          "position": {
+            "start": {
+              "line": 11,
+              "col": 0,
+              "offset": 139
+            },
+            "end": {
+              "line": 11,
+              "col": 17,
+              "offset": 156
+            }
+          },
+          "parent": -11
+        },
+        {
+          "position": {
+            "start": {
+              "line": 15,
+              "col": 0,
+              "offset": 169
+            },
+            "end": {
+              "line": 15,
+              "col": 31,
+              "offset": 200
+            }
+          },
+          "parent": -15
+        },
+        {
+          "position": {
+            "start": {
+              "line": 16,
+              "col": 0,
+              "offset": 201
+            },
+            "end": {
+              "line": 16,
+              "col": 6,
+              "offset": 207
+            }
+          },
+          "parent": -15
+        },
+        {
+          "position": {
+            "start": {
+              "line": 17,
+              "col": 2,
+              "offset": 210
+            },
+            "end": {
+              "line": 17,
+              "col": 25,
+              "offset": 233
+            }
+          },
+          "parent": 16
+        },
+        {
+          "position": {
+            "start": {
+              "line": 18,
+              "col": 2,
+              "offset": 236
+            },
+            "end": {
+              "line": 18,
+              "col": 31,
+              "offset": 265
+            }
+          },
+          "parent": 16
+        },
+        {
+          "position": {
+            "start": {
+              "line": 22,
+              "col": 0,
+              "offset": 280
+            },
+            "end": {
+              "line": 22,
+              "col": 6,
+              "offset": 286
+            }
+          },
+          "parent": -22
+        },
+        {
+          "position": {
+            "start": {
+              "line": 23,
+              "col": 2,
+              "offset": 289
+            },
+            "end": {
+              "line": 23,
+              "col": 33,
+              "offset": 320
+            }
+          },
+          "parent": 22
+        },
+        {
+          "position": {
+            "start": {
+              "line": 24,
+              "col": 2,
+              "offset": 323
+            },
+            "end": {
+              "line": 24,
+              "col": 19,
+              "offset": 340
+            }
+          },
+          "parent": 22
+        },
+        {
+          "position": {
+            "start": {
+              "line": 25,
+              "col": 2,
+              "offset": 343
+            },
+            "end": {
+              "line": 25,
+              "col": 15,
+              "offset": 356
+            }
+          },
+          "parent": 22
+        },
+        {
+          "position": {
+            "start": {
+              "line": 26,
+              "col": 4,
+              "offset": 361
+            },
+            "end": {
+              "line": 26,
+              "col": 49,
+              "offset": 406
+            }
+          },
+          "parent": 25
+        }
+      ]
+    },
+    "Page Simple.md": {
+      "sections": [
+        {
+          "type": "paragraph",
+          "position": {
+            "start": {
+              "line": 0,
+              "col": 0,
+              "offset": 0
+            },
+            "end": {
+              "line": 0,
+              "col": 14,
+              "offset": 14
+            }
+          }
+        }
+      ]
+    },
     "Obsidian to Docusaurus Mapping.md": {
       "headings": [
         {
@@ -440,6 +1222,21 @@
               "offset": 1727
             }
           }
+        },
+        {
+          "type": "code",
+          "position": {
+            "start": {
+              "line": 39,
+              "col": 0,
+              "offset": 1730
+            },
+            "end": {
+              "line": 41,
+              "col": 3,
+              "offset": 1745
+            }
+          }
         }
       ],
       "listItems": [
@@ -755,616 +1552,6 @@
               "line": 36,
               "col": 53,
               "offset": 1727
-            }
-          }
-        }
-      ]
-    },
-    "Structure.md": {
-      "links": [
-        {
-          "link": "Docs Landing Page",
-          "original": "[[Docs Landing Page]]",
-          "displayText": "Docs Landing Page",
-          "position": {
-            "start": {
-              "line": 4,
-              "col": 2,
-              "offset": 32
-            },
-            "end": {
-              "line": 4,
-              "col": 23,
-              "offset": 53
-            }
-          }
-        },
-        {
-          "link": "Page Simple",
-          "original": "[[Page Simple]]",
-          "displayText": "Page Simple",
-          "position": {
-            "start": {
-              "line": 5,
-              "col": 2,
-              "offset": 59
-            },
-            "end": {
-              "line": 5,
-              "col": 17,
-              "offset": 74
-            }
-          }
-        },
-        {
-          "link": "Obsidian to Docusaurus Mapping",
-          "original": "[[Obsidian to Docusaurus Mapping]]",
-          "displayText": "Obsidian to Docusaurus Mapping",
-          "position": {
-            "start": {
-              "line": 6,
-              "col": 2,
-              "offset": 77
-            },
-            "end": {
-              "line": 6,
-              "col": 36,
-              "offset": 111
-            }
-          }
-        },
-        {
-          "link": "Blog Simple",
-          "original": "[[Blog Simple]]",
-          "displayText": "Blog Simple",
-          "position": {
-            "start": {
-              "line": 10,
-              "col": 2,
-              "offset": 124
-            },
-            "end": {
-              "line": 10,
-              "col": 17,
-              "offset": 139
-            }
-          }
-        },
-        {
-          "link": "Docs Landing Page",
-          "original": "[[Docs Landing Page|My Docs]]",
-          "displayText": "My Docs",
-          "position": {
-            "start": {
-              "line": 14,
-              "col": 2,
-              "offset": 154
-            },
-            "end": {
-              "line": 14,
-              "col": 31,
-              "offset": 183
-            }
-          }
-        },
-        {
-          "link": "Docs Landing Page",
-          "original": "[[Docs Landing Page]]",
-          "displayText": "Docs Landing Page",
-          "position": {
-            "start": {
-              "line": 16,
-              "col": 4,
-              "offset": 195
-            },
-            "end": {
-              "line": 16,
-              "col": 25,
-              "offset": 216
-            }
-          }
-        },
-        {
-          "link": "Docs Landing Page",
-          "original": "[[Docs Landing Page|Label]]",
-          "displayText": "Label",
-          "position": {
-            "start": {
-              "line": 17,
-              "col": 4,
-              "offset": 221
-            },
-            "end": {
-              "line": 17,
-              "col": 31,
-              "offset": 248
-            }
-          }
-        },
-        {
-          "link": "Docs Landing Page",
-          "original": "[[Docs Landing Page|Welcome]]",
-          "displayText": "Welcome",
-          "position": {
-            "start": {
-              "line": 22,
-              "col": 4,
-              "offset": 274
-            },
-            "end": {
-              "line": 22,
-              "col": 33,
-              "offset": 303
-            }
-          }
-        },
-        {
-          "link": "Page Simple",
-          "original": "[[Page Simple]]",
-          "displayText": "Page Simple",
-          "position": {
-            "start": {
-              "line": 23,
-              "col": 4,
-              "offset": 308
-            },
-            "end": {
-              "line": 23,
-              "col": 19,
-              "offset": 323
-            }
-          }
-        },
-        {
-          "link": "Obsidian to Docusaurus Mapping",
-          "original": "[[Obsidian to Docusaurus Mapping|Mappings]]",
-          "displayText": "Mappings",
-          "position": {
-            "start": {
-              "line": 25,
-              "col": 6,
-              "offset": 346
-            },
-            "end": {
-              "line": 25,
-              "col": 49,
-              "offset": 389
-            }
-          }
-        }
-      ],
-      "tags": [
-        {
-          "tag": "#docusaurus/test/_",
-          "position": {
-            "start": {
-              "line": 0,
-              "col": 0,
-              "offset": 0
-            },
-            "end": {
-              "line": 0,
-              "col": 18,
-              "offset": 18
-            }
-          }
-        }
-      ],
-      "headings": [
-        {
-          "heading": "Pages",
-          "level": 2,
-          "position": {
-            "start": {
-              "line": 2,
-              "col": 0,
-              "offset": 20
-            },
-            "end": {
-              "line": 2,
-              "col": 8,
-              "offset": 28
-            }
-          }
-        },
-        {
-          "heading": "Blog",
-          "level": 2,
-          "position": {
-            "start": {
-              "line": 8,
-              "col": 0,
-              "offset": 113
-            },
-            "end": {
-              "line": 8,
-              "col": 7,
-              "offset": 120
-            }
-          }
-        },
-        {
-          "heading": "Navbar",
-          "level": 2,
-          "position": {
-            "start": {
-              "line": 12,
-              "col": 0,
-              "offset": 141
-            },
-            "end": {
-              "line": 12,
-              "col": 9,
-              "offset": 150
-            }
-          }
-        },
-        {
-          "heading": "Sidebars",
-          "level": 2,
-          "position": {
-            "start": {
-              "line": 19,
-              "col": 0,
-              "offset": 250
-            },
-            "end": {
-              "line": 19,
-              "col": 11,
-              "offset": 261
-            }
-          }
-        }
-      ],
-      "sections": [
-        {
-          "type": "paragraph",
-          "position": {
-            "start": {
-              "line": 0,
-              "col": 0,
-              "offset": 0
-            },
-            "end": {
-              "line": 0,
-              "col": 18,
-              "offset": 18
-            }
-          }
-        },
-        {
-          "type": "heading",
-          "position": {
-            "start": {
-              "line": 2,
-              "col": 0,
-              "offset": 20
-            },
-            "end": {
-              "line": 2,
-              "col": 8,
-              "offset": 28
-            }
-          }
-        },
-        {
-          "type": "list",
-          "position": {
-            "start": {
-              "line": 4,
-              "col": 0,
-              "offset": 30
-            },
-            "end": {
-              "line": 6,
-              "col": 36,
-              "offset": 111
-            }
-          }
-        },
-        {
-          "type": "heading",
-          "position": {
-            "start": {
-              "line": 8,
-              "col": 0,
-              "offset": 113
-            },
-            "end": {
-              "line": 8,
-              "col": 7,
-              "offset": 120
-            }
-          }
-        },
-        {
-          "type": "list",
-          "position": {
-            "start": {
-              "line": 10,
-              "col": 0,
-              "offset": 122
-            },
-            "end": {
-              "line": 10,
-              "col": 17,
-              "offset": 139
-            }
-          }
-        },
-        {
-          "type": "heading",
-          "position": {
-            "start": {
-              "line": 12,
-              "col": 0,
-              "offset": 141
-            },
-            "end": {
-              "line": 12,
-              "col": 9,
-              "offset": 150
-            }
-          }
-        },
-        {
-          "type": "list",
-          "position": {
-            "start": {
-              "line": 14,
-              "col": 0,
-              "offset": 152
-            },
-            "end": {
-              "line": 17,
-              "col": 31,
-              "offset": 248
-            }
-          }
-        },
-        {
-          "type": "heading",
-          "position": {
-            "start": {
-              "line": 19,
-              "col": 0,
-              "offset": 250
-            },
-            "end": {
-              "line": 19,
-              "col": 11,
-              "offset": 261
-            }
-          }
-        },
-        {
-          "type": "list",
-          "position": {
-            "start": {
-              "line": 21,
-              "col": 0,
-              "offset": 263
-            },
-            "end": {
-              "line": 25,
-              "col": 49,
-              "offset": 389
-            }
-          }
-        }
-      ],
-      "listItems": [
-        {
-          "parent": -4,
-          "position": {
-            "start": {
-              "line": 4,
-              "col": 0,
-              "offset": 30
-            },
-            "end": {
-              "line": 4,
-              "col": 26,
-              "offset": 56
-            }
-          }
-        },
-        {
-          "parent": -4,
-          "position": {
-            "start": {
-              "line": 5,
-              "col": 0,
-              "offset": 57
-            },
-            "end": {
-              "line": 5,
-              "col": 17,
-              "offset": 74
-            }
-          }
-        },
-        {
-          "parent": -4,
-          "position": {
-            "start": {
-              "line": 6,
-              "col": 0,
-              "offset": 75
-            },
-            "end": {
-              "line": 6,
-              "col": 36,
-              "offset": 111
-            }
-          }
-        },
-        {
-          "parent": -10,
-          "position": {
-            "start": {
-              "line": 10,
-              "col": 0,
-              "offset": 122
-            },
-            "end": {
-              "line": 10,
-              "col": 17,
-              "offset": 139
-            }
-          }
-        },
-        {
-          "parent": -14,
-          "position": {
-            "start": {
-              "line": 14,
-              "col": 0,
-              "offset": 152
-            },
-            "end": {
-              "line": 14,
-              "col": 31,
-              "offset": 183
-            }
-          }
-        },
-        {
-          "parent": -14,
-          "position": {
-            "start": {
-              "line": 15,
-              "col": 0,
-              "offset": 184
-            },
-            "end": {
-              "line": 15,
-              "col": 6,
-              "offset": 190
-            }
-          }
-        },
-        {
-          "parent": 15,
-          "position": {
-            "start": {
-              "line": 16,
-              "col": 2,
-              "offset": 193
-            },
-            "end": {
-              "line": 16,
-              "col": 25,
-              "offset": 216
-            }
-          }
-        },
-        {
-          "parent": 15,
-          "position": {
-            "start": {
-              "line": 17,
-              "col": 2,
-              "offset": 219
-            },
-            "end": {
-              "line": 17,
-              "col": 31,
-              "offset": 248
-            }
-          }
-        },
-        {
-          "parent": -21,
-          "position": {
-            "start": {
-              "line": 21,
-              "col": 0,
-              "offset": 263
-            },
-            "end": {
-              "line": 21,
-              "col": 6,
-              "offset": 269
-            }
-          }
-        },
-        {
-          "parent": 21,
-          "position": {
-            "start": {
-              "line": 22,
-              "col": 2,
-              "offset": 272
-            },
-            "end": {
-              "line": 22,
-              "col": 33,
-              "offset": 303
-            }
-          }
-        },
-        {
-          "parent": 21,
-          "position": {
-            "start": {
-              "line": 23,
-              "col": 2,
-              "offset": 306
-            },
-            "end": {
-              "line": 23,
-              "col": 19,
-              "offset": 323
-            }
-          }
-        },
-        {
-          "parent": 21,
-          "position": {
-            "start": {
-              "line": 24,
-              "col": 2,
-              "offset": 326
-            },
-            "end": {
-              "line": 24,
-              "col": 15,
-              "offset": 339
-            }
-          }
-        },
-        {
-          "parent": 24,
-          "position": {
-            "start": {
-              "line": 25,
-              "col": 4,
-              "offset": 344
-            },
-            "end": {
-              "line": 25,
-              "col": 49,
-              "offset": 389
-            }
-          }
-        }
-      ]
-    },
-    "Page Simple.md": {
-      "sections": [
-        {
-          "type": "paragraph",
-          "position": {
-            "start": {
-              "line": 0,
-              "col": 0,
-              "offset": 0
-            },
-            "end": {
-              "line": 0,
-              "col": 14,
-              "offset": 14
             }
           }
         }

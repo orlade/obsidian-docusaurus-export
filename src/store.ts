@@ -15,6 +15,7 @@ export interface ContentStore {
   loadFile(ref: FileRef): Promise<File>;
   copy(file: FileRef, newPath: string): Promise<FileRef>;
   write(data: string, path: string): Promise<FileRef>;
+  mkdir(path: string): Promise<void>;
 }
 
 // OBSIMIAN IMPL
@@ -79,6 +80,8 @@ export class ObsimianContentStore implements ContentStore {
     this.copies[file.path].push(newPath);
     return null;
   }
+
+  async mkdir(path: string): Promise<void> {}
 }
 
 // OBSIDIAN IMPL
@@ -150,6 +153,10 @@ export class ObsidianContentStore implements ContentStore {
     fs.ensureDirSync(dirname(p));
     fs.writeFileSync(p, data);
     return null;
+  }
+
+  async mkdir(path: string): Promise<void> {
+    fs.mkdirpSync(this.resolve(path));
   }
 
   async getMetadata(ref: OFileRef): Promise<CachedMetadata> {

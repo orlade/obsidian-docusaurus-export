@@ -1,5 +1,6 @@
+import _ from "lodash";
 import { ObsimianPlugin } from "obsimian";
-import { Site } from "./model";
+import { Document, ref, Site } from "./model";
 import { SiteBuilder } from "./pipeline";
 import { ObsimianContentStore } from "./store";
 import { extractStructure, findStructureFiles } from "./structure";
@@ -39,12 +40,13 @@ describe("structure", () => {
 
   it("extracts from store", () => {
     return findStructureFiles(cs).then(([s]) => {
-      expect(extractStructure(cs, s)).resolves.toMatchObject({
+      return expect(extractStructure(cs, s)).resolves.toMatchObject({
         id: "test",
         blogLinks: [{ label: "Blog Simple", sourcePath: "Blog Simple.md" }],
         pageLinks: [
           { label: "Docs Landing Page", sourcePath: "Docs Landing Page.md", slug: "/" },
           { label: "Page Simple", sourcePath: "Page Simple.md" },
+          { label: "Page Links", sourcePath: "Page Links.md" },
           {
             label: "Obsidian to Docusaurus Mapping",
             sourcePath: "Obsidian to Docusaurus Mapping.md",
@@ -82,6 +84,41 @@ describe("structure", () => {
     });
   });
 
+  it("enriches content", async () => {
+    const sourcePath = "Page Simple.md";
+    const doc: Document = { sourcePath };
+
+    await sb.enrichContent(doc);
+
+    expect(doc).toEqual({
+      sourcePath,
+      content: "Simplest page.",
+    });
+  });
+
+  it("replaces links", async () => {
+    const sourcePath = "Page Links.md";
+    const doc: Document = { sourcePath };
+    await sb.enrichContent(doc);
+    const site: Site = {
+      blog: { posts: { "Blog Simple.md": { sourcePath: "Blog Simple.md" } } },
+      pages: { docs: { "Page Simple.md": {}, "Page Links.md": {} } },
+    } as any as Site;
+
+    await sb.replaceLinks(doc, site);
+
+    expect(doc).toEqual({
+      sourcePath,
+      content: `Page with links.
+
+[Page Simple](/docs/Page%20Simple)
+
+[Blog Simple](/blog/Blog%20Simple)
+
+[Page Links](/docs/Page%20Links)`,
+    });
+  });
+
   describe("test site", () => {
     const props = {
       title: "foo",
@@ -91,7 +128,7 @@ describe("structure", () => {
     };
 
     it("builds", () => {
-      expect(sb.build(props)).resolves.toMatchObject({
+      return expect(sb.build(props)).resolves.toMatchObject({
         title: "foo",
         url: "foo.com",
         repo: "github.com/bar/foo",
@@ -119,6 +156,10 @@ describe("structure", () => {
               sourcePath: "Page Simple.md",
               content: /.+/,
             },
+            "Page Links.md": {
+              label: "Page Links",
+              sourcePath: "Page Links.md",
+            },
             "Obsidian to Docusaurus Mapping.md": {
               label: "Obsidian to Docusaurus Mapping",
               sourcePath: "Obsidian to Docusaurus Mapping.md",
@@ -138,7 +179,12 @@ describe("structure", () => {
                   slug: "/",
                   category: "docs",
                 },
-                { label: "Label", sourcePath: "Docs Landing Page.md", slug: "/", category: "docs" },
+                {
+                  label: "Label",
+                  sourcePath: "Docs Landing Page.md",
+                  slug: "/",
+                  category: "docs",
+                },
               ],
             },
             { label: "Blog", sourcePath: "/blog" },
